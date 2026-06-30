@@ -1,0 +1,32 @@
+# VayuLens backend dependencies.
+# Grouped by the role that needs them. Pin versions before first real release.
+
+# ── Shared (all roles) ────────────────────────────────────────────────
+pydantic>=2.6            # contracts/ schemas + validation
+
+# ── Role 1: data / ingestion ──────────────────────────────────────────
+pandas>=2.2              # tabular wrangling, fusion
+numpy>=1.26              # numerics
+xarray>=2024.1           # gridded / satellite arrays
+earthengine-api>=0.1.390 # Google Earth Engine satellite pipeline
+geopandas>=0.14          # grid building, ward/land-use joins
+rasterio>=1.3            # raster (AOD/aerosol) handling
+requests>=2.31           # source connectors / raw pulls
+apscheduler>=3.10        # ingestion schedulers
+
+# ── Role 2: attribution / forecasting ─────────────────────────────────
+scikit-learn>=1.4        # attribution models
+scipy>=1.12              # dispersion / numerical methods
+statsmodels>=0.14        # forecasting baselines
+
+# ── Role 3: rag / decision ────────────────────────────────────────────
+anthropic>=0.39          # grounded generation + agentic recommendations (Claude)
+langchain>=0.2           # RAG orchestration
+chromadb>=0.5            # vector store
+sentence-transformers>=2.6 # embeddings
+pypdf>=4.0               # document ingestion
+
+# ── Role 4: api ───────────────────────────────────────────────────────
+fastapi>=0.110           # API gateway
+uvicorn[standard]>=0.29  # ASGI server
+httpx>=0.27              # inter-service / outbound calls
