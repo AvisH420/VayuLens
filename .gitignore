@@ -48,6 +48,10 @@ vector_store/
 *.sqlite
 *.db
 
+# ── Local working files (not for the repo) ────────────────────────────
+Design/
+VayuLens_Work_Allocation.docx
+
 # ── OS / editor ───────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
