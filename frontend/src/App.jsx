@@ -1,18 +1,19 @@
-// VayuLens app shell. Composes the four feature areas.
-// Components are intentionally empty stubs for now.
-import MapView from "./components/map/MapView.jsx";
-import ForecastSlider from "./components/forecast/ForecastSlider.jsx";
-import WhatIfPanel from "./components/whatif/WhatIfPanel.jsx";
-import ChatPanel from "./components/chat/ChatPanel.jsx";
+// VayuLens app shell: landing page at /, dashboard at /app.
+// Routes are lazy so three.js ships only with the landing and
+// maplibre only with the dashboard.
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
+
+const Landing = lazy(() => import("./components/landing/Landing.jsx"));
+const Dashboard = lazy(() => import("./components/dashboard/Dashboard.jsx"));
 
 export default function App() {
   return (
-    <div className="app">
-      <h1>VayuLens</h1>
-      <MapView />
-      <ForecastSlider />
-      <WhatIfPanel />
-      <ChatPanel />
-    </div>
+    <Suspense fallback={null}>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/app" element={<Dashboard />} />
+      </Routes>
+    </Suspense>
   );
 }
