@@ -16,11 +16,12 @@ export default function ShaderWash({ reduced, variant = "band" }) {
   const v = VARIANTS[variant];
   return (
     <div className="shader-wash" aria-hidden="true">
+      {/* no lazyLoad: the scene must render while still offscreen so it is
+          already moving when scrolled to, instead of popping in on arrival */}
       <ShaderGradientCanvas
         style={{ position: "absolute", inset: 0 }}
         pixelDensity={1}
         fov={40}
-        lazyLoad
         pointerEvents="none"
       >
         <ShaderGradient

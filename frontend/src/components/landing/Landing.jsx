@@ -618,7 +618,7 @@ export default function Landing() {
               Grid: {delhi.cells.length.toLocaleString()} cells over Delhi ·{" "}
               {panaji.cells.length} over Panaji · 1 km × 1 km
             </span>
-            <span>Frontend running on demo data; FastAPI gateway lands next.</span>
+            <span>FastAPI gateway live on the demo engine; real data lands next.</span>
             <div className="footer-links">
               <a
                 href="https://github.com/AvisH420/VayuLens"
