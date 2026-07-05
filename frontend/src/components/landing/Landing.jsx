@@ -4,10 +4,20 @@
 // content-bearing stays in the document flow and fully static under
 // reduced motion.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useTransform } from "motion/react";
+import { ArrowRight } from "lucide-react";
 import EarthGlobe from "./EarthGlobe.jsx";
+import FeatureGrid from "./FeatureGrid.jsx";
+import IndiaMap from "./IndiaMap.jsx";
+import DashboardPreview from "./DashboardPreview.jsx";
+import CtaBand from "./CtaBand.jsx";
+import Spotlight from "./Spotlight.jsx";
+import FooterWordmark from "./FooterWordmark.jsx";
+import { webglAvailable } from "./webgl.js";
+
+const ShaderWash = lazy(() => import("./ShaderWash.jsx"));
 import ForecastChart from "../charts/ForecastChart.jsx";
 import SourceBars from "../charts/SourceBars.jsx";
 import { buildCity, runScenario } from "../../lib/mock.js";
@@ -38,6 +48,34 @@ const DATA_SOURCES = [
 ];
 
 const spring = { type: "spring", stiffness: 70, damping: 18 };
+
+// statement copy, split so each word can stagger in (em: italic emphasis)
+const STATEMENT = [
+  { text: "India already measures its air well. What a 2024 audit found is that only" },
+  { text: "31% of monitored cities", em: true },
+  { text: "had any response protocol tied to their readings. The data exists." },
+  { text: "The layer that acts on it doesn't.", em: true },
+];
+
+function StatementWords({ on }) {
+  let i = 0;
+  return STATEMENT.map((seg, s) => {
+    const words = seg.text.split(" ").map((w) => {
+      const el = (
+        <span
+          className={`st-word ${on ? "in" : ""}`}
+          style={{ transitionDelay: `${i * 32}ms` }}
+          key={i}
+        >
+          {w}{" "}
+        </span>
+      );
+      i += 1;
+      return el;
+    });
+    return seg.em ? <em key={`s${s}`}>{words}</em> : words;
+  });
+}
 
 export default function Landing() {
   const delhi = useMemo(() => buildCity("delhi"), []);
@@ -80,8 +118,27 @@ export default function Landing() {
     return () => clearTimeout(t);
   }, []);
 
+  // page-wide shader wash: mounted once the globe has had first claim on the
+  // GPU; the static CSS wash stays underneath as the fallback
+  const canGL = useMemo(webglAvailable, []);
+  const [washOn, setWashOn] = useState(false);
+  useEffect(() => {
+    if (!canGL) return undefined;
+    const t = setTimeout(() => setWashOn(true), 1200);
+    return () => clearTimeout(t);
+  }, [canGL]);
+
   useEffect(() => {
     document.title = "VayuLens · Air quality intelligence for Indian cities";
+  }, []);
+
+  // nav condenses into a glass pill once the page starts moving
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 40);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
   }, []);
 
   // hero scroll choreography: progress measured directly from the stage's
@@ -132,10 +189,31 @@ export default function Landing() {
   const p2Y = useTransform(heroP, [0.48, 0.7], [90, 0]);
   const hintOpacity = useTransform(heroP, [0, 0.06], [1, 0]);
 
-  // statement section: gentle rise and fade as it passes
-  const stOpacity = useTransform(stP, [0.15, 0.38, 0.62, 0.85], [0, 1, 1, 0]);
+  // statement section: gentle rise as it passes; the words themselves fade
+  // in staggered (sandbox text-generate pattern), so the container only
+  // handles the exit fade at the bottom of the pass
+  const stOpacity = useTransform(stP, [0.62, 0.85], [1, 0]);
   const stRotate = useTransform(stP, [0, 1], [7, -3]);
   const stY = useTransform(stP, [0, 1], [40, -40]);
+
+  // one-shot trigger for the word stagger
+  const [stSeen, setStSeen] = useState(false);
+  useEffect(() => {
+    if (reduced) return undefined;
+    const el = stRef.current;
+    if (!el) return undefined;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setStSeen(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
 
   // heading ink fill on scroll (cheap, shared handler)
   const rootRef = useRef(null);
@@ -177,9 +255,18 @@ export default function Landing() {
 
   return (
     <div className="landing" ref={rootRef}>
-      <div className="landing-wash" aria-hidden="true" />
+      <div className="landing-wash" aria-hidden="true">
+        {washOn && (
+          <Suspense fallback={null}>
+            <ShaderWash reduced={reduced} variant="page" />
+          </Suspense>
+        )}
+      </div>
 
-      <motion.nav className="landing-nav glass" {...entrance(0.05)}>
+      <motion.nav
+        className={`landing-nav ${scrolled ? "condensed" : ""}`}
+        {...entrance(0.05)}
+      >
         <span className="wordmark">
           <span className="wordmark-ring" aria-hidden="true" />
           VayuLens
@@ -199,6 +286,7 @@ export default function Landing() {
       <section className="hero-stage" ref={stageRef}>
         <div className="hero-pin">
           <EarthGlobe progressRef={progressRef} onReady={() => setReady(true)} />
+          <Spotlight />
 
           <motion.div
             className={`hero-copy hero-phase1 ${phase2 ? "off" : ""}`}
@@ -220,7 +308,7 @@ export default function Landing() {
               <div className="hero-ctas">
                 <Link to="/app" className="btn btn-primary">
                   Open the Delhi grid
-                  <span aria-hidden="true">→</span>
+                  <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
                 </Link>
                 <a href="#simulator" className="btn btn-ghost">
                   See a what-if run
@@ -284,10 +372,7 @@ export default function Landing() {
                 : { opacity: stOpacity, rotateX: stRotate, y: stY }
             }
           >
-            India already measures its air well. What a 2024 audit found is
-            that only <em>31% of monitored cities</em> had any response
-            protocol tied to their readings. The data exists.{" "}
-            <em>The layer that acts on it doesn't.</em>
+            <StatementWords on={reduced || stSeen} />
           </motion.p>
         </div>
       </section>
@@ -303,6 +388,28 @@ export default function Landing() {
             </span>
           ))}
         </div>
+      </section>
+
+      {/* ---- capability grid ---- */}
+      <section className="section" id="platform">
+        <div className="section-head">
+          <p className="eyebrow">The platform</p>
+          <h2>Eight instruments on one grid.</h2>
+        </div>
+        <FeatureGrid />
+      </section>
+
+      {/* ---- dashboard preview ---- */}
+      <section className="section section-preview" id="preview">
+        <div className="section-head">
+          <p className="eyebrow">The operations view</p>
+          <h2>A control room for air, not a wall of numbers.</h2>
+          <p className="section-sub">
+            The grid, the attribution panel, the simulator and the assistant
+            share one screen, built for the officer who has to act on it today.
+          </p>
+        </div>
+        <DashboardPreview reduced={reduced} />
       </section>
 
       {/* ---- attribution ---- */}
@@ -454,6 +561,44 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ---- pilot deployments ---- */}
+      <section className="section" id="pilots">
+        <div className="pilots-grid">
+          <div>
+            <div className="section-head pilots-head">
+              <p className="eyebrow">Pilot deployments</p>
+              <h2>Proven at two scales.</h2>
+              <p className="section-sub">
+                Delhi, a megacity under winter inversion. Panaji, a coastal
+                capital an order of magnitude cleaner. The same grid, the same
+                attribution engine, runs both without retuning.
+              </p>
+            </div>
+            <div className="pilot-stats">
+              {[
+                { city: delhi, note: "NCT winter baseline" },
+                { city: panaji, note: "coastal monsoon-washed air" },
+              ].map(({ city, note }) => (
+                <div className="pilot-stat" key={city.cfg.id}>
+                  <span className="pilot-stat-city">{city.cfg.name}</span>
+                  <span className="pilot-stat-cells">
+                    {city.cells.length.toLocaleString()} cells ·{" "}
+                    <span style={{ color: aqiBand(city.avgAqi).color }}>
+                      AQI {city.avgAqi}
+                    </span>
+                  </span>
+                  <span className="pilot-stat-note">{note}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <IndiaMap />
+        </div>
+      </section>
+
+      {/* ---- closing call ---- */}
+      <CtaBand reduced={reduced} />
+
       {/* ---- footer ---- */}
       <footer className="landing-footer">
         <div className="footer-grid">
@@ -486,6 +631,7 @@ export default function Landing() {
             </div>
           </div>
         </div>
+        <FooterWordmark />
       </footer>
     </div>
   );

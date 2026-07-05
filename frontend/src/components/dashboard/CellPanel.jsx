@@ -3,7 +3,9 @@
 // overlay when one is active), and grounded recommendations.
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { aqiBand } from "../../lib/aqi.js";
+import { animate } from "../../lib/anim.js";
 import { getRecommendations } from "../../lib/api.js";
 import SourceBars from "../charts/SourceBars.jsx";
 import ForecastChart from "../charts/ForecastChart.jsx";
@@ -56,7 +58,9 @@ export default function CellPanel({ city, cell, scenario, onClose }) {
           <p className="eyebrow">{cell.ward}</p>
           <p className="panel-cellid">cell {cell.cell_id.replace("grid_", "")}</p>
         </div>
-        <button className="drawer-close" onClick={onClose} aria-label="Close cell panel">×</button>
+        <button className="drawer-close" onClick={onClose} aria-label="Close cell panel">
+          <X size={17} strokeWidth={2.1} aria-hidden="true" />
+        </button>
       </div>
 
       <div className="panel-hero">
@@ -92,7 +96,7 @@ export default function CellPanel({ city, cell, scenario, onClose }) {
         />
       </div>
 
-      <div className="panel-block">
+      <div className="panel-block" ref={animate}>
         <h4>Recommended actions</h4>
         {!recs ? (
           <p className="panel-note">Ranking against the regulation corpus…</p>

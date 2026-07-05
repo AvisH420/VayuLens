@@ -4,6 +4,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { FlaskConical, MessageSquareQuote } from "lucide-react";
 import MapView from "../map/MapView.jsx";
 import CellPanel from "./CellPanel.jsx";
 import WhatIfPanel from "../whatif/WhatIfPanel.jsx";
@@ -124,6 +125,7 @@ export default function Dashboard() {
               setChatOpen(false);
             }}
           >
+            <FlaskConical size={14} strokeWidth={2} aria-hidden="true" />
             What-if
           </button>
           <button
@@ -133,6 +135,7 @@ export default function Dashboard() {
               setWhatifOpen(false);
             }}
           >
+            <MessageSquareQuote size={14} strokeWidth={2} aria-hidden="true" />
             Assistant
           </button>
         </div>
