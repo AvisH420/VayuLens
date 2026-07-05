@@ -1,6 +1,7 @@
 // API client. Route names and shapes mirror api/gateway.py one-to-one.
-// USE_MOCKS serves everything from lib/mock.js; flip it off once the
-// FastAPI gateway is live and the same call sites hit /api/* unchanged.
+// Mocks (lib/mock.js) are the default; run with VITE_USE_MOCKS=false and
+// the same call sites hit the FastAPI gateway through the Vite /api proxy
+// (see vite.config.js — start it with: uvicorn api.gateway:app --reload).
 
 import {
   buildCity,
@@ -9,7 +10,7 @@ import {
   chatAnswer,
 } from "./mock.js";
 
-const USE_MOCKS = true;
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== "false";
 
 const latency = () =>
   new Promise((r) => setTimeout(r, 120 + Math.random() * 180));
@@ -34,19 +35,26 @@ export async function getAttribution(cityId, cellId) {
 }
 
 export async function getForecast(cityId, cellId) {
-  if (!USE_MOCKS) return real(`/forecast/${cellId}`);
+  if (!USE_MOCKS) {
+    // gateway returns contracts/forecast.py points [{t, aqi}]
+    const f = await real(`/forecast/${cellId}`);
+    return { cell_id: f.cell_id, horizon: f.horizon.map((p) => Math.round(p.aqi)) };
+  }
   await latency();
   const cell = buildCity(cityId).cells.find((c) => c.cell_id === cellId);
   return { cell_id: cellId, horizon: cell.forecast };
 }
 
 export async function postSimulate(cityId, scenario) {
-  if (!USE_MOCKS)
-    return real(`/simulate`, {
+  if (!USE_MOCKS) {
+    const sim = await real(`/simulate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ city: cityId, ...scenario }),
     });
+    // results arrive as a plain JSON object; downstream expects a Map
+    return { ...sim, results: new Map(Object.entries(sim.results)) };
+  }
   await new Promise((r) => setTimeout(r, 650 + Math.random() * 350));
   return runScenario(cityId, scenario);
 }

@@ -19,24 +19,43 @@ outputs of every backend module behind one consistent API, returning the shared
 
 - JSON responses typed by `contracts/` schemas.
 
-## Endpoints (stubbed)
+## Endpoints (live, served by the demo engine)
 
-| Method | Path                        | Returns                  |
-| ------ | --------------------------- | ------------------------ |
-| GET    | `/grid`                     | `list[GridCell]`         |
-| GET    | `/measurements/{cell_id}`   | `list[Measurement]`      |
-| GET    | `/attribution/{cell_id}`    | `Attribution`            |
-| GET    | `/forecast/{cell_id}`       | `Forecast`               |
-| POST   | `/simulate`                 | `list[Forecast]`         |
-| GET    | `/recommendations/{cell_id}`| `list[Recommendation]`   |
-| POST   | `/chat`                     | grounded answer + cites  |
+| Method | Path                        | Returns                                                  |
+| ------ | --------------------------- | -------------------------------------------------------- |
+| GET    | `/health`                   | liveness + cell counts per city                           |
+| GET    | `/grid?city=`               | full city payload (cfg + enriched cells + city means)     |
+| GET    | `/measurements/{cell_id}`   | `list[Measurement]`                                       |
+| GET    | `/attribution/{cell_id}`    | `Attribution`                                             |
+| GET    | `/forecast/{cell_id}`       | `Forecast`                                                |
+| POST   | `/simulate`                 | per-cell counterfactuals + summary (`SimulationResult`)   |
+| GET    | `/recommendations/{cell_id}`| `list[Recommendation]`                                    |
+| POST   | `/chat`                     | grounded answer + citations (`ChatAnswer`)                |
+| GET    | `/advisories/{city}`        | citizen advisories keyed by language                      |
 
-## Run (once implemented)
+Contracts models are returned verbatim where they fit; gateway-local
+envelopes (`SimulationResult`, `ChatAnswer`) wrap them where the frontend
+needs more than a bare list. `contracts/` itself is untouched.
+
+## Run
 
 ```bash
-uvicorn api.gateway:app --reload
+# once: from the repo root
+python3 -m venv .venv
+.venv/bin/pip install "fastapi>=0.110" "uvicorn[standard]>=0.29" "pydantic>=2.6"
+
+# every time
+.venv/bin/uvicorn api.gateway:app --reload    # http://127.0.0.1:8000/docs
 ```
 
-## Key module
+The frontend hits it through the Vite `/api` proxy — start the dev server
+with `VITE_USE_MOCKS=false npm run dev` and every async call site switches
+from `lib/mock.js` to the gateway with no UI changes.
 
-- `gateway.py` — the FastAPI `app` and route stubs.
+## Key modules
+
+- `gateway.py` — the FastAPI `app`, all routes implemented.
+- `demo_engine.py` — deterministic Python port of `frontend/src/lib/mock.js`
+  (same mulberry32 RNG, numerically identical grid). Each handler swaps its
+  engine call for the real module (data/attribution/forecasting/rag/decision)
+  as those land; response shapes stay fixed.
