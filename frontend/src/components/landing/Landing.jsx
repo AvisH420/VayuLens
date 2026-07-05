@@ -14,7 +14,6 @@ import IndiaMap from "./IndiaMap.jsx";
 import DashboardPreview from "./DashboardPreview.jsx";
 import CtaBand from "./CtaBand.jsx";
 import Spotlight from "./Spotlight.jsx";
-import FooterWordmark from "./FooterWordmark.jsx";
 import { webglAvailable } from "./webgl.js";
 
 const ShaderWash = lazy(() => import("./ShaderWash.jsx"));
@@ -258,7 +257,7 @@ export default function Landing() {
       <div className="landing-wash" aria-hidden="true">
         {washOn && (
           <Suspense fallback={null}>
-            <ShaderWash reduced={reduced} variant="page" />
+            <ShaderWash reduced={reduced} />
           </Suspense>
         )}
       </div>
@@ -597,7 +596,7 @@ export default function Landing() {
       </section>
 
       {/* ---- closing call ---- */}
-      <CtaBand reduced={reduced} />
+      <CtaBand />
 
       {/* ---- footer ---- */}
       <footer className="landing-footer">
@@ -631,7 +630,6 @@ export default function Landing() {
             </div>
           </div>
         </div>
-        <FooterWordmark />
       </footer>
     </div>
   );

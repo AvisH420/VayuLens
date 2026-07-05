@@ -1,19 +1,17 @@
-// The animated gradient surface used as the page background and inside the
-// closing band. Isolated in its own chunk (lazy-imported) so the
-// shadergradient/react-three dependency stays out of the main landing bundle.
-// The `.shader-wash` wrapper fades the canvas in slowly once the chunk lands,
+// The animated gradient surface behind the whole landing page (the CTA band
+// shows it through translucent glass — it deliberately has no canvas of its
+// own). Isolated in its own chunk (lazy-imported) so the shadergradient/
+// react-three dependency stays out of the main landing bundle. The
+// `.shader-wash` wrapper fades the canvas in slowly once the chunk lands,
 // so the surface never pops over the static fallback.
 
 import { ShaderGradientCanvas, ShaderGradient } from "@shadergradient/react";
 
 // Green family only: blue-leaning colors drift purple under the 3d light.
-const VARIANTS = {
-  band: { colors: ["#f1f5ee", "#c6d9cd", "#9cc0aa"], speed: 0.12, strength: 1.7 },
-  page: { colors: ["#f5f8f3", "#e3ece3", "#ccdcd1"], speed: 0.08, strength: 1.3 },
-};
+const WASH = { colors: ["#f4f7f1", "#dce9dd", "#b9d4c2"], speed: 0.09, strength: 1.4 };
 
-export default function ShaderWash({ reduced, variant = "band" }) {
-  const v = VARIANTS[variant];
+export default function ShaderWash({ reduced }) {
+  const v = WASH;
   return (
     <div className="shader-wash" aria-hidden="true">
       {/* no lazyLoad: the scene must render while still offscreen so it is
