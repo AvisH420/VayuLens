@@ -751,40 +751,6 @@
   color: var(--ink);
 }
 
-/* closing outline wordmark; the cursor inks the stroke in on hover */
-.footer-wordmark {
-  display: block;
-  width: 100%;
-  height: auto;
-  margin-top: 64px;
-  user-select: none;
-}
-
-.footer-wordmark text {
-  font-family: var(--font-display);
-  font-size: 104px;
-  font-weight: 560;
-  letter-spacing: 0.05em;
-}
-
-.fw-base {
-  fill: transparent;
-  stroke: rgba(24, 36, 32, 0.17);
-  stroke-width: 1;
-}
-
-.fw-color {
-  fill: transparent;
-  stroke: url(#fw-ink);
-  stroke-width: 1.2;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-
-.footer-wordmark:hover .fw-color {
-  opacity: 1;
-}
-
 /* ---- capability grid (hairline-divided, quiet hover accent) ---- */
 
 .feature-grid {
@@ -1020,15 +986,18 @@
   padding: 0 32px;
 }
 
+/* translucent glass: the animated page wash (fixed, behind the page) shows
+   through, so the band's background is always already moving on arrival —
+   it owns no canvas and nothing loads when it enters the viewport */
 .cta-band {
   position: relative;
   border-radius: 26px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   background:
-    radial-gradient(70% 120% at 20% 0%, rgba(183, 205, 217, 0.55), transparent 70%),
-    radial-gradient(80% 130% at 85% 100%, rgba(134, 178, 151, 0.4), transparent 72%),
-    #eef3ec;
+    radial-gradient(70% 120% at 20% 0%, rgba(183, 205, 217, 0.26), transparent 70%),
+    radial-gradient(80% 130% at 85% 100%, rgba(134, 178, 151, 0.2), transparent 72%),
+    rgba(255, 255, 255, 0.22);
   box-shadow: var(--shadow-soft);
 }
 
