@@ -2,7 +2,9 @@
 // confidence, plus the multi-language citizen advisory view.
 
 import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 import { postChat } from "../../lib/api.js";
+import { animate } from "../../lib/anim.js";
 import { ADVISORIES } from "../../lib/mock.js";
 
 const SUGGESTIONS = [
@@ -49,7 +51,9 @@ export default function ChatPanel({ city, onClose }) {
             Advisory
           </button>
         </div>
-        <button className="drawer-close" onClick={onClose} aria-label="Close assistant">×</button>
+        <button className="drawer-close" onClick={onClose} aria-label="Close assistant">
+          <X size={17} strokeWidth={2.1} aria-hidden="true" />
+        </button>
       </div>
 
       {tab === "ask" ? (
@@ -58,7 +62,13 @@ export default function ChatPanel({ city, onClose }) {
             Grounded on GRAP, NCAP and CPCB SOPs (mock corpus). Cites its
             passages; abstains when retrieval is weak.
           </p>
-          <div className="chat-log" ref={logRef}>
+          <div
+            className="chat-log"
+            ref={(el) => {
+              logRef.current = el;
+              animate(el);
+            }}
+          >
             {messages.length === 0 && (
               <div className="chat-suggestions">
                 {SUGGESTIONS.map((s) => (
