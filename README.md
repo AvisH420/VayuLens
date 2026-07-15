@@ -138,14 +138,14 @@ All cross-module data uses the shared shapes in [`contracts/`](contracts/README.
 
 | Folder           | Role   | Owner area                  | Purpose                                                |
 | ---------------- | ------ | --------------------------- | ------------------------------------------------------ |
-| [`data/`](data/) | Role 1 | Data Engineer               | Source connectors, ~1km grid builder, calibration/fusion |
-| [`ingestion/`](ingestion/) | Role 1 | Data Engineer     | Schedulers, raw pulls, GEE satellite pipeline          |
-| [`attribution/`](attribution/) | Role 2 | Modeling        | Source-attribution engine                              |
-| [`forecasting/`](forecasting/) | Role 2 | Modeling        | Dispersion model, 24-72h forecast, `simulate(scenario)`|
-| [`rag/`](rag/)   | Role 3 | Knowledge & Agents          | Doc ingestion, vector store, retriever, grounded gen, eval |
-| [`decision/`](decision/) | Role 3 | Knowledge & Agents  | Agentic recommendations, enforcement priority, multi-language advisories |
-| [`api/`](api/)   | Role 4 | Platform & Frontend         | FastAPI gateway aggregating all modules                |
-| [`frontend/`](frontend/) | Role 4 | Platform & Frontend | React app — map, layers, forecast slider, what-if, chat |
+| [`data/`](data/) | Role 1(Rudra) | Data Engineer               | Source connectors, ~1km grid builder, calibration/fusion |
+| [`ingestion/`](ingestion/) | Role 1(Rudra) | Data Engineer     | Schedulers, raw pulls, GEE satellite pipeline          |
+| [`attribution/`](attribution/) | Role 2(Anuvi) | Modeling        | Source-attribution engine                              |
+| [`forecasting/`](forecasting/) | Role 2(Anuvi) | Modeling        | Dispersion model, 24-72h forecast, `simulate(scenario)`|
+| [`rag/`](rag/)   | Role 3(Dhareet) | Knowledge & Agents          | Doc ingestion, vector store, retriever, grounded gen, eval |
+| [`decision/`](decision/) | Role 3(Dhareet) | Knowledge & Agents  | Agentic recommendations, enforcement priority, multi-language advisories |
+| [`api/`](api/)   | Role 4(Jugraj) | Platform & Frontend         | FastAPI gateway aggregating all modules                |
+| [`frontend/`](frontend/) | Role 4(Jugraj) | Platform & Frontend | React app — map, layers, forecast slider, what-if, chat |
 | [`contracts/`](contracts/) | shared | all roles         | Shared data schemas every role builds against          |
 | [`docs/`](docs/) | shared | all roles                   | Architecture notes                                     |
 
