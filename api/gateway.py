@@ -20,6 +20,7 @@ Docs: http://127.0.0.1:8000/docs
 
 from __future__ import annotations
 
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -39,11 +40,19 @@ app = FastAPI(
     description="Air-quality intelligence gateway: grid, attribution, forecasts, what-if simulation, grounded chat.",
 )
 
-# Dev frontend (Vite) origins. The Vite proxy makes this mostly moot, but
-# direct browser calls during development should work too.
+# Allowed browser origins.
+#
+# In production the frontend is served from Vercel and /api/* is rewritten
+# server-side to this service (see frontend/vercel.json), so the browser sees
+# a same-origin request and CORS never applies. These entries matter for local
+# dev and for anyone calling the API directly -- set CORS_ORIGINS to a
+# comma-separated list to add the deployed frontend domain.
+_DEFAULT_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+_env_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=_DEFAULT_ORIGINS + _env_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
