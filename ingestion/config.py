@@ -7,7 +7,21 @@ city bounding boxes, and credential helpers.
 from __future__ import annotations
 
 import os
+from datetime import datetime, timezone
 from pathlib import Path
+
+
+def utc_now() -> datetime:
+    """Current UTC time as a *naive* datetime.
+
+    ``datetime.utcnow()`` is deprecated from Python 3.12.  The pipeline
+    treats every timestamp as naive-UTC end to end (connectors, alignment,
+    ``Measurement.timestamp``), so this preserves that convention while
+    dropping the deprecated call.  Do not swap this for an aware datetime
+    without converting the whole chain at once -- mixing the two raises
+    ``TypeError`` on comparison.
+    """
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 # ── Paths ─────────────────────────────────────────────────────────────
 INGESTION_DIR = Path(__file__).resolve().parent
@@ -58,10 +72,71 @@ OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 CPCB_CCR_URL = "https://app.cpcbccr.com/ccr/"
 
 # ── Target cities: (min_lon, min_lat, max_lon, max_lat) ───────────────
+# Bounds mirror api/demo_engine.py so the ingested grid lines up with the
+# grid the dashboard renders.  "goa" is kept as an alias for "panaji": the
+# full-state box tessellates to ~7 650 cells, far more than the city view needs.
 CITY_BBOX: dict[str, tuple[float, float, float, float]] = {
-    "delhi": (76.84, 28.40, 77.35, 28.88),
-    "goa": (73.67, 14.89, 74.34, 15.80),
+    "delhi": (76.92, 28.42, 77.38, 28.82),
+    "panaji": (73.76, 15.42, 73.90, 15.56),
+    "goa": (73.76, 15.42, 73.90, 15.56),
 }
+
+
+# ── Per-city pollution profiles ───────────────────────────────────────
+# Mock generators read these so synthetic data reflects each city's actual
+# character rather than one hardcoded Delhi-like baseline.  Anchored to the
+# demo_engine headline numbers: Delhi AQI ~210, Panaji ~52.
+#
+# The AOD terms feed calibration's PM2.5 = 70 x AOD + 5 regression, so they
+# set the concentration for the ~98% of cells that have no ground station.
+CITY_PROFILES: dict[str, dict[str, float]] = {
+    "delhi": {
+        "pm25_base":  88.0,   # station mean ug/m3 -> CPCB AQI ~200
+        "no2_base":   45.0,
+        "so2_base":   12.0,
+        "co_base":  1200.0,
+        "o3_base":    35.0,
+        "aod_urban":   1.33,  # tuned so fused PM2.5 lands near 90 ug/m3
+        "aod_spread":  0.66,
+        "aod_floor":   0.48,
+        "wind_base":   2.3,
+    },
+    "panaji": {
+        "pm25_base":  30.0,   # coastal, sea breeze -> CPCB AQI ~50
+        "no2_base":   14.0,
+        "so2_base":    4.0,
+        "co_base":   450.0,
+        "o3_base":    28.0,
+        "aod_urban":   0.25,  # mean AOD ~0.36 -> 70x0.36+5 ~= 30 ug/m3
+        "aod_spread":  0.15,
+        "aod_floor":   0.13,
+        "wind_base":   4.1,
+    },
+}
+
+DEFAULT_CITY = "delhi"
+
+
+def profile_for_bbox(
+    bbox: tuple[float, float, float, float],
+) -> dict[str, float]:
+    """Return the pollution profile of whichever city *bbox* falls in.
+
+    Matches on the centre of *bbox* against ``CITY_BBOX``.  Falls back to
+    the ``DEFAULT_CITY`` profile when nothing matches, so an unknown area
+    still produces plausible data rather than crashing.
+    """
+    min_lon, min_lat, max_lon, max_lat = bbox
+    c_lon = (min_lon + max_lon) / 2.0
+    c_lat = (min_lat + max_lat) / 2.0
+
+    for city, (b_min_lon, b_min_lat, b_max_lon, b_max_lat) in CITY_BBOX.items():
+        if b_min_lat <= c_lat <= b_max_lat and b_min_lon <= c_lon <= b_max_lon:
+            profile = CITY_PROFILES.get(city)
+            if profile is not None:
+                return profile
+
+    return CITY_PROFILES[DEFAULT_CITY]
 
 # ── Rate limits (requests per second) ─────────────────────────────────
 RATE_LIMITS: dict[str, float] = {

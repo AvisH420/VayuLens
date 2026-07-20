@@ -40,7 +40,7 @@ def _run_pull_job(source_name: str, bbox: tuple[float, float, float, float]) -> 
         return
 
     connector = connector_cls()
-    now = datetime.utcnow()
+    now = cfg.utc_now()
     # Pull the last hour of data
     from datetime import timedelta
     since = now - timedelta(hours=1)
@@ -115,7 +115,7 @@ def pull_raw(
     records = connector.pull(bbox, since, until)
 
     if records:
-        raw_store.save_raw(source_name, records, datetime.utcnow())
+        raw_store.save_raw(source_name, records, cfg.utc_now())
 
     return records
 

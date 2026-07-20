@@ -8,6 +8,7 @@ Mock mode : deterministic synthetic CAAQMS readings aligned with OpenAQ mock
 from __future__ import annotations
 
 import hashlib
+import logging
 import math
 from datetime import datetime, timedelta
 
@@ -15,6 +16,8 @@ import requests
 
 from ingestion.base_connector import BaseConnector
 from ingestion import config as cfg
+
+logger = logging.getLogger("vayulens.ingestion")
 
 # Subset of known CPCB CAAQMS stations (Delhi)
 _CPCB_STATIONS = [
@@ -56,9 +59,14 @@ class CPCBConnector(BaseConnector):
     ) -> list[dict]:
         """Attempt to pull from the CPCB CCR public portal.
 
-        The CPCB portal does not have a stable public API; this implementation
-        tries to hit the known internal JSON endpoints.  If they change or
-        block scraping, it falls back gracefully to an empty list.
+        The CPCB portal has no stable public API.  As of the last check the
+        ``api/station/list`` endpoint below returns HTTP 404 and this
+        connector yields nothing in real mode -- WAQI and OpenAQ are the
+        working ground-station sources.  Kept so the portal can be picked
+        back up if a usable endpoint is found.
+
+        Failures are logged loudly rather than swallowed: an empty result
+        here is indistinguishable from "the air is clean" downstream.
         """
         records: list[dict] = []
         try:
@@ -73,6 +81,11 @@ class CPCBConnector(BaseConnector):
             station_url = f"{cfg.CPCB_CCR_URL}api/station/list"
             resp = session.get(station_url, timeout=30)
             if resp.status_code != 200:
+                logger.warning(
+                    "[cpcb] station list unavailable (HTTP %s from %s) — "
+                    "returning 0 records; rely on waqi/openaq for ground data",
+                    resp.status_code, station_url,
+                )
                 return records
 
             stations = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else []
@@ -109,9 +122,17 @@ class CPCBConnector(BaseConnector):
                             "o3": item.get("o3"),
                             "datetime": item.get("datetime", ""),
                         })
-        except Exception:
-            pass  # CPCB portal is unreliable; fail gracefully
+        except Exception as exc:
+            logger.warning(
+                "[cpcb] portal scrape failed (%s: %s) — returning %d records",
+                type(exc).__name__, exc, len(records),
+            )
 
+        if not records:
+            logger.warning(
+                "[cpcb] real pull produced 0 records — CPCB is contributing "
+                "nothing to fusion for this window"
+            )
         return records
 
     # ── MOCK implementation ───────────────────────────────────────────
@@ -128,6 +149,9 @@ class CPCBConnector(BaseConnector):
         if not stations:
             stations = _CPCB_STATIONS[:5]
 
+        prof = cfg.profile_for_bbox(bbox)
+        spread = prof["pm25_base"] / 85.0   # keep noise proportional to level
+
         records: list[dict] = []
         ts = since
         while ts < until:
@@ -139,18 +163,19 @@ class CPCBConnector(BaseConnector):
                 # Slight positive bias compared to OpenAQ (realistic inter-source difference)
                 bias = 1.05
 
+                pm25 = prof["pm25_base"] * diurnal * bias + 35 * spread * (_rng(s) - 0.5)
                 records.append({
                     "source": "cpcb",
                     "station_id": sid,
                     "station_name": name,
                     "lat": lat,
                     "lon": lon,
-                    "pm25": round(max(1, 88 * diurnal * bias + 35 * (_rng(s) - 0.5)), 2),
-                    "pm10": round(max(2, 160 * diurnal * bias + 50 * (_rng(s+1) - 0.5)), 2),
-                    "no2": round(max(1, 48 * diurnal * bias + 18 * (_rng(s+2) - 0.5)), 2),
-                    "so2": round(max(0.5, 13 * bias + 7 * (_rng(s+3) - 0.3)), 2),
-                    "co": round(max(100, 1250 * bias + 500 * (_rng(s+4) - 0.5)), 2),
-                    "o3": round(max(1, 38 + 22 * (_rng(s+5) - 0.4)), 2),
+                    "pm25": round(max(1, pm25), 2),
+                    "pm10": round(max(2, pm25 * 1.8 + 50 * spread * (_rng(s+1) - 0.5)), 2),
+                    "no2": round(max(1, prof["no2_base"] * diurnal * bias + 18 * spread * (_rng(s+2) - 0.5)), 2),
+                    "so2": round(max(0.5, prof["so2_base"] * bias + 7 * spread * (_rng(s+3) - 0.3)), 2),
+                    "co": round(max(100, prof["co_base"] * bias + 500 * spread * (_rng(s+4) - 0.5)), 2),
+                    "o3": round(max(1, prof["o3_base"] + 22 * spread * (_rng(s+5) - 0.4)), 2),
                     "datetime": ts.isoformat(),
                 })
             ts += timedelta(hours=1)
