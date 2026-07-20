@@ -136,6 +136,9 @@ class OpenAQConnector(BaseConnector):
         if not stations:
             stations = _DELHI_STATIONS[:5]
 
+        prof = cfg.profile_for_bbox(bbox)
+        spread = prof["pm25_base"] / 85.0   # keep noise proportional to level
+
         records: list[dict] = []
         ts = since
         while ts < until:
@@ -146,12 +149,12 @@ class OpenAQConnector(BaseConnector):
                 # Diurnal pattern: peaks ~9 AM and ~9 PM
                 diurnal = 1.0 + 0.3 * math.sin(math.pi * (hour - 3) / 12)
 
-                pm25_base = 85.0 * diurnal + 40 * (_pseudo(s) - 0.5)
-                pm10_base = pm25_base * 1.8 + 20 * _pseudo(s + 1)
-                no2_base = 45.0 * diurnal + 20 * (_pseudo(s + 2) - 0.5)
-                so2_base = 12.0 + 8 * (_pseudo(s + 3) - 0.3)
-                co_base = 1200.0 + 600 * (_pseudo(s + 4) - 0.5)
-                o3_base = 35.0 + 25 * (_pseudo(s + 5) - 0.4)
+                pm25_base = prof["pm25_base"] * diurnal + 40 * spread * (_pseudo(s) - 0.5)
+                pm10_base = pm25_base * 1.8 + 20 * spread * _pseudo(s + 1)
+                no2_base = prof["no2_base"] * diurnal + 20 * spread * (_pseudo(s + 2) - 0.5)
+                so2_base = prof["so2_base"] + 8 * spread * (_pseudo(s + 3) - 0.3)
+                co_base = prof["co_base"] + 600 * spread * (_pseudo(s + 4) - 0.5)
+                o3_base = prof["o3_base"] + 25 * spread * (_pseudo(s + 5) - 0.4)
 
                 for param, val, unit in [
                     ("pm25", max(1, pm25_base), "µg/m³"),

@@ -149,6 +149,7 @@ class GEESatelliteConnector(BaseConnector):
     ) -> list[dict]:
         min_lon, min_lat, max_lon, max_lat = bbox
         step = 0.01  # ~1 km
+        prof = cfg.profile_for_bbox(bbox)
 
         records: list[dict] = []
         current_date = since
@@ -166,11 +167,20 @@ class GEESatelliteConnector(BaseConnector):
                     )
                     urban_factor = max(0.3, 1.0 - dist_center * 8)
 
-                    no2 = (8.0 * urban_factor + 4.0 * _rng(s)) * 1e-6
-                    aerosol_idx = 1.2 * urban_factor + 0.8 * _rng(s+1)
-                    co = (0.03 * urban_factor + 0.015 * _rng(s+2))
-                    so2 = (3.0 * urban_factor + 2.0 * _rng(s+3)) * 1e-6
-                    aod = 0.4 * urban_factor + 0.6 * _rng(s+4) + 0.1
+                    # Scale by the city profile so a clean coastal city does
+                    # not inherit Delhi's satellite signature.
+                    no2_scale = prof["no2_base"] / 45.0
+                    aod_scale = prof["aod_urban"] / 1.0
+
+                    no2 = (8.0 * urban_factor + 4.0 * _rng(s)) * no2_scale * 1e-6
+                    aerosol_idx = (1.2 * urban_factor + 0.8 * _rng(s+1)) * aod_scale
+                    co = (0.03 * urban_factor + 0.015 * _rng(s+2)) * no2_scale
+                    so2 = (3.0 * urban_factor + 2.0 * _rng(s+3)) * no2_scale * 1e-6
+                    aod = (
+                        prof["aod_urban"] * urban_factor
+                        + prof["aod_spread"] * _rng(s+4)
+                        + prof["aod_floor"]
+                    )
 
                     for product, value in [
                         ("no2", no2),

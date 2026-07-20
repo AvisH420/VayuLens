@@ -16,6 +16,7 @@ from contracts.grid_cell import GridCell
 from contracts.measurement import Measurement
 
 from data import grid_builder, alignment, calibration, fusion, gap_filling
+from ingestion import config as cfg
 from ingestion.connectors import CONNECTORS
 
 logger = logging.getLogger("vayulens.data")
@@ -41,7 +42,7 @@ def build_grid(
 
     # Step 2: Pull OSM context data
     osm_connector = CONNECTORS["osm"]()
-    osm_records = osm_connector.pull(bbox, datetime.utcnow(), datetime.utcnow())
+    osm_records = osm_connector.pull(bbox, cfg.utc_now(), cfg.utc_now())
     logger.info("Fetched %d OSM context records", len(osm_records))
 
     # Step 3: Attach context
@@ -192,7 +193,7 @@ def run_pipeline(
     bbox = cfg.CITY_BBOX.get(city_id, cfg.CITY_BBOX["delhi"])
 
     if until is None:
-        until = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
+        until = cfg.utc_now().replace(minute=0, second=0, microsecond=0)
     if since is None:
         since = until - timedelta(hours=24)
 

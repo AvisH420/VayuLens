@@ -83,9 +83,13 @@ class OpenMeteoConnector(BaseConnector):
         since: datetime, until: datetime,
     ) -> list[dict]:
         min_lon, min_lat, max_lon, max_lat = bbox
-        step = 0.1
+        # ~5 km sampling: the real Open-Meteo grid is ~11 km, but a denser mock
+        # keeps meteorology from being a single point over a small city bbox.
+        step = 0.05
         lats = _arange(min_lat, max_lat, step)
         lons = _arange(min_lon, max_lon, step)
+        prof = cfg.profile_for_bbox(bbox)
+        spread = prof["pm25_base"] / 85.0
 
         records: list[dict] = []
         ts = since
@@ -98,7 +102,11 @@ class OpenMeteoConnector(BaseConnector):
 
                     # Temperature: peaks mid-afternoon
                     temp = 32 + 8 * math.sin(math.pi * (hour - 6) / 12) + 3 * (_rng(s) - 0.5)
-                    wind_speed = 2.5 + 3.0 * _rng(s + 1) + 1.5 * math.sin(math.pi * hour / 12)
+                    wind_speed = (
+                        prof["wind_base"]
+                        + 1.6 * _rng(s + 1)
+                        + 0.8 * math.sin(math.pi * hour / 12)
+                    )
                     wind_dir = (180 + 120 * (_rng(s + 2) - 0.5)) % 360
                     humidity = 55 + 20 * math.sin(math.pi * (hour + 6) / 12) + 10 * (_rng(s + 3) - 0.5)
 
@@ -106,12 +114,12 @@ class OpenMeteoConnector(BaseConnector):
                         "source": "open_meteo",
                         "lat": round(lat, 4),
                         "lon": round(lon, 4),
-                        "pm25": round(max(1, 70 * diurnal + 30 * (_rng(s + 4) - 0.5)), 2),
-                        "pm10": round(max(2, 130 * diurnal + 50 * (_rng(s + 5) - 0.5)), 2),
-                        "no2": round(max(1, 40 * diurnal + 15 * (_rng(s + 6) - 0.5)), 2),
-                        "so2": round(max(0.5, 10 + 6 * (_rng(s + 7) - 0.3)), 2),
-                        "co": round(max(50, 900 + 400 * (_rng(s + 8) - 0.5)), 2),
-                        "o3": round(max(1, 30 + 20 * (_rng(s + 9) - 0.4)), 2),
+                        "pm25": round(max(1, prof["pm25_base"] * 0.82 * diurnal + 30 * spread * (_rng(s + 4) - 0.5)), 2),
+                        "pm10": round(max(2, prof["pm25_base"] * 1.53 * diurnal + 50 * spread * (_rng(s + 5) - 0.5)), 2),
+                        "no2": round(max(1, prof["no2_base"] * 0.89 * diurnal + 15 * spread * (_rng(s + 6) - 0.5)), 2),
+                        "so2": round(max(0.5, prof["so2_base"] * 0.83 + 6 * spread * (_rng(s + 7) - 0.3)), 2),
+                        "co": round(max(50, prof["co_base"] * 0.75 + 400 * spread * (_rng(s + 8) - 0.5)), 2),
+                        "o3": round(max(1, prof["o3_base"] * 0.86 + 20 * spread * (_rng(s + 9) - 0.4)), 2),
                         "temp": round(temp, 1),
                         "wind_speed": round(max(0.5, wind_speed), 1),
                         "wind_dir": round(wind_dir, 1),
