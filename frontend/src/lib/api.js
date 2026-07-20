@@ -12,11 +12,19 @@ import {
 
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== "false";
 
+// Where the gateway lives. Defaults to "/api", which the Vite dev proxy
+// forwards to localhost:8000. In production set VITE_API_BASE to the
+// deployed gateway origin (e.g. https://vayulens-api.onrender.com) — the
+// browser then calls it directly and the gateway's CORS_ORIGINS must list
+// the frontend domain. Trailing slashes are trimmed so the joined path
+// never ends up with a double slash.
+const API_BASE = (import.meta.env.VITE_API_BASE || "/api").replace(/\/+$/, "");
+
 const latency = () =>
   new Promise((r) => setTimeout(r, 120 + Math.random() * 180));
 
 async function real(path, opts) {
-  const res = await fetch(`/api${path}`, opts);
+  const res = await fetch(`${API_BASE}${path}`, opts);
   if (!res.ok) throw new Error(`${path} -> ${res.status}`);
   return res.json();
 }
