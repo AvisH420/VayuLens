@@ -16,11 +16,11 @@ from contracts.measurement import Measurement
 # come from a ~10 km reanalysis grid, so only a handful of cells receive them
 # directly even when almost every cell already has PM2.5 from satellite AOD.
 _FILLABLE_FIELDS = (
-    "pm25", "pm10", "no2", "aod", "aerosol_index",
-    "temp", "wind_speed", "wind_dir",
+    "pm25", "pm10", "no2", "aod", "uv_aerosol_index",
+    "temp", "wind_speed", "wind_direction",
 )
 
-_FIELD_DECIMALS = {"aod": 4, "aerosol_index": 2, "temp": 1, "wind_speed": 1, "wind_dir": 1}
+_FIELD_DECIMALS = {"aod": 4, "uv_aerosol_index": 2, "temp": 1, "wind_speed": 1, "wind_direction": 1}
 
 
 def fill_gaps(
@@ -63,8 +63,6 @@ def fill_gaps(
     if all(len(d) in (0, len(measurements)) for d in donors.values()):
         return measurements
 
-    wind_dir_donors = donors.get("wind_dir", [])
-
     for idx, m in enumerate(measurements):
         missing = [f for f in _FILLABLE_FIELDS if getattr(m, f, None) is None]
         if not missing:
@@ -94,9 +92,9 @@ def fill_gaps(
             neighbours = neighbours[:max_neighbours]
             dists = [d for d, _ in neighbours]
 
-            if field == "wind_dir":
+            if field == "wind_direction":
                 value = _idw_circular(
-                    [measurements[j].wind_dir for _, j in neighbours], dists, power
+                    [measurements[j].wind_direction for _, j in neighbours], dists, power
                 )
             else:
                 value = _idw(

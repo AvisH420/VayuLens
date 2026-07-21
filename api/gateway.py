@@ -155,15 +155,18 @@ def get_measurements(cell_id: str) -> list[Measurement]:
     return [
         Measurement(
             cell_id=cell_id,
+            lat=cell["lat"],
+            lon=cell["lon"],
             timestamp=_demo_now(),
             pm25=cell["pm25"],
             pm10=cell["pm10"],
             no2=cell["no2"],
+            so2=round(cell["shares"]["industry"] * cell["pm25"] * 0.12, 2),
             aod=cell["aod"],
-            aerosol_index=round(0.4 + cell["shares"]["burning"] * 4, 2),
+            uv_aerosol_index=round(0.4 + cell["shares"]["burning"] * 4, 2),
             temp=31.5,
             wind_speed=cfg["wind"]["speed"],
-            wind_dir=cfg["wind"]["dir"],
+            wind_direction=cfg["wind"]["dir"],
             quality_score=cell["quality_score"],
             uncertainty=cell["uncertainty"],
         )
