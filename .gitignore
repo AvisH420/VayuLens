@@ -1,61 +1,18 @@
-# ── Python ────────────────────────────────────────────────────────────
+# Python cache files
 __pycache__/
-*.py[cod]
-*.egg-info/
-.eggs/
-build/
-dist/
-.venv/
-venv/
-env/
+*.pyc
+*.pyo
+*.pyd
 .pytest_cache/
-.mypy_cache/
-.ruff_cache/
+.coverage
+htmlcov/
+
+# Local configuration / Agent directories
+.gemini/
+.agents/
 .ipynb_checkpoints/
 
-# ── Node / frontend ───────────────────────────────────────────────────
-node_modules/
-frontend/dist/
-frontend/dist-ssr/
-*.local
-.vite/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# ── Environment / secrets ─────────────────────────────────────────────
-.env
-.env.*
-!.env.example
-*.pem
-*.key
-service-account*.json
-gee-credentials*.json
-
-# ── Data files (don't commit raw / processed data) ────────────────────
-data_store/
-raw/
-processed/
-*.csv
-*.parquet
-*.nc
-*.tif
-*.tiff
-*.geojson
-*.shp
-*.zip
-vector_store/
-*.sqlite
-*.db
-
-# ── Local working files (not for the repo) ────────────────────────────
-Design/
-VayuLens_Work_Allocation.docx
-CLAUDE.md
-
-# ── OS / editor ───────────────────────────────────────────────────────
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/
-*.swp
+# Virtual environments
+venv/
+.venv/
+env/
