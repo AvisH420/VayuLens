@@ -1,0 +1,27 @@
+services:
+  vayulens-decision:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vayulens/decision:latest
+    container_name: vayulens-decision
+    ports:
+      - "8000:8000"
+    environment:
+      # Override any config value with VAYULENS__<section>__<key>.
+      # Defaults boot with no external services (offline-capable providers).
+      VAYULENS__APP__LOG_LEVEL: "INFO"
+      # To use real models/providers, set these and mount your API keys:
+      # VAYULENS__EMBEDDINGS__PROVIDER: "sentence_transformers"
+      # VAYULENS__VECTOR_STORE__BACKEND: "faiss"
+      # VAYULENS__LLM__PROVIDER: "openai"
+      # OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      # ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      # GOOGLE_API_KEY: "${GOOGLE_API_KEY}"
+    volumes:
+      - ./data:/app/data
+      - vayulens_storage:/app/storage
+    restart: unless-stopped
+
+volumes:
+  vayulens_storage:

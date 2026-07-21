@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/health",
+    "body": null
+  },
+  "response": {
+    "status": "ok",
+    "version": "1.0.0",
+    "indexed_chunks": 24,
+    "embedding_provider": "hash",
+    "vector_backend": "memory",
+    "llm_provider": "extractive",
+    "reranker": "LexicalReranker"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/recommend",
+    "body": {
+      "location": {
+        "name": "Anand Vihar",
+        "population": 250000,
+        "hospitals_nearby": 3,
+        "schools_nearby": 12
+      },
+      "current_aqi": 432,
+      "source_attribution": [
+        {
+          "source": "construction",
+          "contribution_pct": 42
+        },
+        {
+          "source": "traffic",
+          "contribution_pct": 28
+        },
+        {
+          "source": "industry",
+          "contribution_pct": 18
+        }
+      ],
+      "forecast": [
+        {
+          "horizon_hours": 24,
+          "aqi": 455
+        }
+      ]
+    }
+  },
+  "response": {
+    "location": "Anand Vihar",
+    "aqi_band": "Severe",
+    "grap_stage": "Stage III",
+    "summary": "Anand Vihar: AQI 432 (Severe), GRAP Stage III. 3 enforcement action(s) recommended. Forecast peak AQI 455 in 24h (worsening).",
+    "recommendations": [
+      {
+        "action": "Halt non-essential construction and demolition activity; enforce dust-control SOP (anti-smog guns, wind barriers, water sprinkling).",
+        "priority": "critical",
+        "target_source": "construction",
+        "legal_basis": [
+          {
+            "doc_id": "42079e7b5790a42b",
+            "source": "GRAP_2023.md",
+            "title": "GRAP 2023",
+            "doc_type": "GRAP",
+            "page": 1,
+            "section": "Stage I — Poor (AQI 201-300)",
+            "snippet": "Under GRAP Stage I, mechanized sweeping and water sprinkling of roads shall be enforced. Strict enforcement of dust control norms at construction and demolition (C&D) sites above 500 sq. m. is mandatory. Ban on open burning of solid waste and biomass. Enforce PUC (Pollution Under",
+            "score": 0.8047
+          },
+          {
+            "doc_id": "80a8e687d36b624e",
+            "source": "Delhi_Interventions_2022.md",
+            "title": "Delhi Interventions 2022",
+            "doc_type": "Intervention Report",
+            "page": 1,
+            "section": "Construction Ban under GRAP Stage III (November 2022)",
+            "snippet": "A ban on non-essential construction and demolition was invoked when AQI crossed 420. Post-intervention monitoring showed a measurable decline in coarse particulate (PM10) at sites within 2 km of major construction clusters within 72 hours, attributed primarily to reduced dust re-",
+            "score": 0.4873
+          }
+        ],
+        "justification": "Strict enforcement of dust control norms at construction and\ndemolition (C&D) sites above 500 sq. [1] Under GRAP Stage I, mechanized sweeping and water sprinkling of roads shall be\nenforced. [1] Erection of wind-breaking barriers of at least 6 feet height around the\n   project boundary before commencement of construction. [2] Under GRAP Stage III, there is a ban on construction and demolition activities\nin the entire NCR, except for essential projects such as railways, metro,\nairports, and national security. [3]",
+        "expected_impact": "Rapid reduction in coarse particulate (PM10) from dust re-suspension within 24-72 hours around affected clusters.",
+        "grap_stage": "Stage III",
+        "confidence": 0.4722
+      },
+      {
+        "action": "Intensify PUC enforcement, augment public transport, and consider vehicle-use restrictions (BS-III petrol / BS-IV diesel).",
+        "priority": "high",
+        "target_source": "traffic",
+        "legal_basis": [
+          {
+            "doc_id": "42079e7b5790a42b",
+            "source": "GRAP_2023.md",
+            "title": "GRAP 2023",
+            "doc_type": "GRAP",
+            "page": 1,
+            "section": "Stage II — Very Poor (AQI 301-400)",
+            "snippet": "Under GRAP Stage II, diesel generator sets shall be restricted except for essential and emergency services. Parking fees shall be increased to discourage private transport, and CNG/electric bus and metro services augmented. Intensify inspections at identified air-pollution hotspo",
+            "score": 0.2717
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Outdoor Workers",
+            "snippet": "Outdoor workers, including traffic police and construction labourers, should be provided N95 masks and rotated to reduce continuous exposure when AQI is Poor or worse. Employers should reschedule strenuous outdoor work to lower-pollution hours where feasible.",
+            "score": 0.1812
+          }
+        ],
+        "justification": "Restrictions on BS-III petrol and\nBS-IV diesel light motor vehicles may be imposed. [1] Under GRAP Stage III, there is a ban on construction and demolition activities\nin the entire NCR, except for essential projects such as railways, metro,\nairports, and national security. [1] Under GRAP Stage II, diesel generator sets shall be restricted except for\nessential and emergency services. [2] Deployment of bio-decomposer and in-situ crop residue management machinery\nreduced the number of farm fire counts in some districts, but transboundary\ntransport of smoke continued to contribute 15-40% of Delhi's PM2.5 during peak\nstubble-burning weeks, highlighting the need for coordinated regional action. [5]",
+        "expected_impact": "Moderate PM2.5 reduction in traffic corridors; benefit concentrated during the restriction window.",
+        "grap_stage": "Stage III",
+        "confidence": 0.388
+      },
+      {
+        "action": "Direct closure or fuel-switching of industries on unapproved fuels; inspect emission compliance under the Air Act.",
+        "priority": "medium",
+        "target_source": "industry",
+        "legal_basis": [
+          {
+            "doc_id": "42079e7b5790a42b",
+            "source": "GRAP_2023.md",
+            "title": "GRAP 2023",
+            "doc_type": "GRAP",
+            "page": 1,
+            "section": "Stage IV — Severe Plus (AQI above 450)",
+            "snippet": "Under GRAP Stage IV, closure of all non-essential highly polluting industries operating on unapproved fuels is mandatory. Entry of trucks into the NCR is banned except those carrying essential commodities or running on LNG/CNG/BS-VI diesel or electric. Public, municipal, and priv",
+            "score": 0.4704
+          },
+          {
+            "doc_id": "c87f3fb4c29d4fb4",
+            "source": "CAQM_Dust_SOP.md",
+            "title": "CAQM Dust SOP",
+            "doc_type": "CAQM",
+            "page": 1,
+            "section": "Monitoring and Registration",
+            "snippet": "All C&D sites of built-up area 500 sq. m. and above must register on the designated web portal and install self-monitoring dust sensors linked to the regulatory dashboard. Non-compliant sites are liable for environmental compensation and closure directions under the Air Act, 1981",
+            "score": 0.4425
+          }
+        ],
+        "justification": "industry is a major contributor (18%). Direct closure or fuel-switching of industries on unapproved fuels; inspect emission compliance under the Air Act.",
+        "expected_impact": "Cuts SO2 and industrial particulate at source; effect sustained while directions remain in force.",
+        "grap_stage": "Stage III",
+        "confidence": 0.3
+      }
+    ],
+    "grounded": true,
+    "generated_reasoning": "Legal urgency level: enforce. Actions ranked by source contribution and GRAP enforceability."
+  }
+}

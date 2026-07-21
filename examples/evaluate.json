@@ -1,0 +1,61 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/evaluate",
+    "body": {
+      "samples": [
+        {
+          "question": "construction ban GRAP Stage III",
+          "relevant_doc_ids": []
+        },
+        {
+          "question": "health advisory for outdoor workers",
+          "relevant_doc_ids": []
+        }
+      ]
+    }
+  },
+  "response": {
+    "num_samples": 2,
+    "retrieval_metrics": {
+      "recall@1": 0.0,
+      "precision@1": 0.0,
+      "recall@3": 0.0,
+      "precision@3": 0.0,
+      "recall@5": 0.0,
+      "precision@5": 0.0,
+      "recall@10": 0.0,
+      "precision@10": 0.0,
+      "mrr": 0.0
+    },
+    "generation_metrics": {
+      "faithfulness": 0.8,
+      "context_precision": 0.9,
+      "answer_relevance": 0.875,
+      "groundedness": 0.9,
+      "hallucination_rate": 0.2
+    },
+    "per_sample": [
+      {
+        "question": "construction ban GRAP Stage III",
+        "refused": false,
+        "confidence": 0.7118,
+        "faithfulness": 0.8,
+        "context_precision": 1.0,
+        "answer_relevance": 1.0,
+        "groundedness": 0.9,
+        "hallucination_rate": 0.2
+      },
+      {
+        "question": "health advisory for outdoor workers",
+        "refused": false,
+        "confidence": 0.4335,
+        "faithfulness": 0.8,
+        "context_precision": 0.8,
+        "answer_relevance": 0.75,
+        "groundedness": 0.9,
+        "hallucination_rate": 0.2
+      }
+    ]
+  }
+}

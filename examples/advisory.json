@@ -1,0 +1,1082 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/advisory",
+    "body": {
+      "location": "Anand Vihar",
+      "current_aqi": 432,
+      "audiences": [
+        "citizen",
+        "hospital",
+        "school",
+        "outdoor_worker",
+        "senior_citizen"
+      ],
+      "languages": [
+        "en",
+        "hi",
+        "mr",
+        "ta",
+        "bn",
+        "te"
+      ]
+    }
+  },
+  "response": {
+    "location": "Anand Vihar",
+    "aqi": 432.0,
+    "aqi_band": "Severe",
+    "advisories": [
+      {
+        "audience": "citizen",
+        "language": "en",
+        "aqi_band": "Severe",
+        "headline": "Avoid outdoor activity in Anand Vihar",
+        "message": "AQI is 432. Air quality is hazardous.",
+        "actions": [
+          "Avoid all outdoor physical activity.",
+          "Wear an N95 mask if you must go outside.",
+          "Use air purifiers indoors and keep windows shut."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5522
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.3796
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "citizen",
+        "language": "hi",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar में बाहरी गतिविधि से बचें",
+        "message": "AQI 432 है। हवा हानिकारक है।",
+        "actions": [
+          "सभी बाहरी शारीरिक गतिविधि से बचें।",
+          "बाहर जाना ज़रूरी हो तो N95 मास्क पहनें।",
+          "घर के अंदर एयर प्यूरीफायर चलाएँ, खिड़कियाँ बंद रखें।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5522
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.3796
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "citizen",
+        "language": "mr",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar मध्ये बाहेरील हालचाल टाळा",
+        "message": "AQI 432 आहे. हवा घातक आहे.",
+        "actions": [
+          "सर्व बाहेरील शारीरिक हालचाल टाळा.",
+          "बाहेर जाणे आवश्यक असल्यास N95 मास्क वापरा.",
+          "घरात एअर प्युरिफायर वापरा, खिडक्या बंद ठेवा."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5522
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.3796
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "citizen",
+        "language": "ta",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar இல் வெளிப்புற செயல்பாட்டைத் தவிர்க்கவும்",
+        "message": "AQI 432. காற்று ஆபத்தானது.",
+        "actions": [
+          "அனைத்து வெளிப்புற உடல் செயல்பாடுகளையும் தவிர்க்கவும்.",
+          "வெளியே செல்ல வேண்டுமானால் N95 முகக்கவசம் அணியவும்.",
+          "வீட்டில் காற்று சுத்திகரிப்பானைப் பயன்படுத்தவும்."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5522
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.3796
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "citizen",
+        "language": "bn",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar-এ বাইরের কার্যকলাপ এড়িয়ে চলুন",
+        "message": "AQI 432। বাতাস ক্ষতিকর।",
+        "actions": [
+          "সমস্ত বাইরের শারীরিক কার্যকলাপ এড়িয়ে চলুন।",
+          "বাইরে যেতে হলে N95 মাস্ক পরুন।",
+          "ঘরে এয়ার পিউরিফায়ার ব্যবহার করুন, জানালা বন্ধ রাখুন।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5522
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.3796
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "citizen",
+        "language": "te",
+        "aqi_band": "Severe",
+        "headline": "Anand Viharలో బహిరంగ కార్యకలాపాలను నివారించండి",
+        "message": "AQI 432. గాలి ప్రమాదకరం.",
+        "actions": [
+          "అన్ని బహిరంగ శారీరక కార్యకలాపాలను నివారించండి.",
+          "బయటకు వెళ్లాల్సి వస్తే N95 మాస్క్ ధరించండి.",
+          "ఇంట్లో ఎయిర్ ప్యూరిఫైయర్ వాడండి, కిటికీలు మూసి ఉంచండి."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5522
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.3796
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "hospital",
+        "language": "en",
+        "aqi_band": "Severe",
+        "headline": "Activate surge protocol — Anand Vihar",
+        "message": "AQI is 432. Expect increased respiratory and cardiac admissions.",
+        "actions": [
+          "Ensure adequate oxygen and nebuliser stock.",
+          "Prepare additional beds for respiratory emergencies.",
+          "Coordinate with authorities on capacity."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.6189
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3139
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "hospital",
+        "language": "hi",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar में बाहरी गतिविधि से बचें",
+        "message": "AQI 432 है। हवा हानिकारक है।",
+        "actions": [
+          "सभी बाहरी शारीरिक गतिविधि से बचें।",
+          "बाहर जाना ज़रूरी हो तो N95 मास्क पहनें।",
+          "घर के अंदर एयर प्यूरीफायर चलाएँ, खिड़कियाँ बंद रखें।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.6189
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3139
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "hospital",
+        "language": "mr",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar मध्ये बाहेरील हालचाल टाळा",
+        "message": "AQI 432 आहे. हवा घातक आहे.",
+        "actions": [
+          "सर्व बाहेरील शारीरिक हालचाल टाळा.",
+          "बाहेर जाणे आवश्यक असल्यास N95 मास्क वापरा.",
+          "घरात एअर प्युरिफायर वापरा, खिडक्या बंद ठेवा."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.6189
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3139
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "hospital",
+        "language": "ta",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar இல் வெளிப்புற செயல்பாட்டைத் தவிர்க்கவும்",
+        "message": "AQI 432. காற்று ஆபத்தானது.",
+        "actions": [
+          "அனைத்து வெளிப்புற உடல் செயல்பாடுகளையும் தவிர்க்கவும்.",
+          "வெளியே செல்ல வேண்டுமானால் N95 முகக்கவசம் அணியவும்.",
+          "வீட்டில் காற்று சுத்திகரிப்பானைப் பயன்படுத்தவும்."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.6189
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3139
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "hospital",
+        "language": "bn",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar-এ বাইরের কার্যকলাপ এড়িয়ে চলুন",
+        "message": "AQI 432। বাতাস ক্ষতিকর।",
+        "actions": [
+          "সমস্ত বাইরের শারীরিক কার্যকলাপ এড়িয়ে চলুন।",
+          "বাইরে যেতে হলে N95 মাস্ক পরুন।",
+          "ঘরে এয়ার পিউরিফায়ার ব্যবহার করুন, জানালা বন্ধ রাখুন।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.6189
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3139
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "hospital",
+        "language": "te",
+        "aqi_band": "Severe",
+        "headline": "Anand Viharలో బహిరంగ కార్యకలాపాలను నివారించండి",
+        "message": "AQI 432. గాలి ప్రమాదకరం.",
+        "actions": [
+          "అన్ని బహిరంగ శారీరక కార్యకలాపాలను నివారించండి.",
+          "బయటకు వెళ్లాల్సి వస్తే N95 మాస్క్ ధరించండి.",
+          "ఇంట్లో ఎయిర్ ప్యూరిఫైయర్ వాడండి, కిటికీలు మూసి ఉంచండి."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.6189
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3139
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "school",
+        "language": "en",
+        "aqi_band": "Severe",
+        "headline": "Suspend outdoor activity — Anand Vihar",
+        "message": "AQI is 432. Keep children indoors.",
+        "actions": [
+          "Suspend all outdoor sports and assemblies.",
+          "Consider hybrid or online classes as advised by authorities.",
+          "Keep classroom windows closed."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.8145
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.2928
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "school",
+        "language": "hi",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar में बाहरी गतिविधि से बचें",
+        "message": "AQI 432 है। हवा हानिकारक है।",
+        "actions": [
+          "सभी बाहरी शारीरिक गतिविधि से बचें।",
+          "बाहर जाना ज़रूरी हो तो N95 मास्क पहनें।",
+          "घर के अंदर एयर प्यूरीफायर चलाएँ, खिड़कियाँ बंद रखें।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.8145
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.2928
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "school",
+        "language": "mr",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar मध्ये बाहेरील हालचाल टाळा",
+        "message": "AQI 432 आहे. हवा घातक आहे.",
+        "actions": [
+          "सर्व बाहेरील शारीरिक हालचाल टाळा.",
+          "बाहेर जाणे आवश्यक असल्यास N95 मास्क वापरा.",
+          "घरात एअर प्युरिफायर वापरा, खिडक्या बंद ठेवा."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.8145
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.2928
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "school",
+        "language": "ta",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar இல் வெளிப்புற செயல்பாட்டைத் தவிர்க்கவும்",
+        "message": "AQI 432. காற்று ஆபத்தானது.",
+        "actions": [
+          "அனைத்து வெளிப்புற உடல் செயல்பாடுகளையும் தவிர்க்கவும்.",
+          "வெளியே செல்ல வேண்டுமானால் N95 முகக்கவசம் அணியவும்.",
+          "வீட்டில் காற்று சுத்திகரிப்பானைப் பயன்படுத்தவும்."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.8145
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.2928
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "school",
+        "language": "bn",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar-এ বাইরের কার্যকলাপ এড়িয়ে চলুন",
+        "message": "AQI 432। বাতাস ক্ষতিকর।",
+        "actions": [
+          "সমস্ত বাইরের শারীরিক কার্যকলাপ এড়িয়ে চলুন।",
+          "বাইরে যেতে হলে N95 মাস্ক পরুন।",
+          "ঘরে এয়ার পিউরিফায়ার ব্যবহার করুন, জানালা বন্ধ রাখুন।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.8145
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.2928
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "school",
+        "language": "te",
+        "aqi_band": "Severe",
+        "headline": "Anand Viharలో బహిరంగ కార్యకలాపాలను నివారించండి",
+        "message": "AQI 432. గాలి ప్రమాదకరం.",
+        "actions": [
+          "అన్ని బహిరంగ శారీరక కార్యకలాపాలను నివారించండి.",
+          "బయటకు వెళ్లాల్సి వస్తే N95 మాస్క్ ధరించండి.",
+          "ఇంట్లో ఎయిర్ ప్యూరిఫైయర్ వాడండి, కిటికీలు మూసి ఉంచండి."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Schools and Hospitals",
+            "snippet": "Schools should suspend outdoor assemblies and sports when AQI exceeds 300, and consider closure or hybrid classes when AQI exceeds 400 as advised by authorities. Hospitals should anticipate an increase in respiratory and cardiac admissions and ensure adequate stock of nebulisers,",
+            "score": 0.8145
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.2928
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "outdoor_worker",
+        "language": "en",
+        "aqi_band": "Severe",
+        "headline": "Minimise outdoor exposure — Anand Vihar",
+        "message": "AQI is 432. Continuous outdoor work is unsafe.",
+        "actions": [
+          "Wear an N95 mask at all times outdoors.",
+          "Rotate shifts to limit continuous exposure.",
+          "Reschedule strenuous work to lower-pollution hours."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Outdoor Workers",
+            "snippet": "Outdoor workers, including traffic police and construction labourers, should be provided N95 masks and rotated to reduce continuous exposure when AQI is Poor or worse. Employers should reschedule strenuous outdoor work to lower-pollution hours where feasible.",
+            "score": 0.575
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3984
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "outdoor_worker",
+        "language": "hi",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar में बाहरी गतिविधि से बचें",
+        "message": "AQI 432 है। हवा हानिकारक है।",
+        "actions": [
+          "सभी बाहरी शारीरिक गतिविधि से बचें।",
+          "बाहर जाना ज़रूरी हो तो N95 मास्क पहनें।",
+          "घर के अंदर एयर प्यूरीफायर चलाएँ, खिड़कियाँ बंद रखें।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Outdoor Workers",
+            "snippet": "Outdoor workers, including traffic police and construction labourers, should be provided N95 masks and rotated to reduce continuous exposure when AQI is Poor or worse. Employers should reschedule strenuous outdoor work to lower-pollution hours where feasible.",
+            "score": 0.575
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3984
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "outdoor_worker",
+        "language": "mr",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar मध्ये बाहेरील हालचाल टाळा",
+        "message": "AQI 432 आहे. हवा घातक आहे.",
+        "actions": [
+          "सर्व बाहेरील शारीरिक हालचाल टाळा.",
+          "बाहेर जाणे आवश्यक असल्यास N95 मास्क वापरा.",
+          "घरात एअर प्युरिफायर वापरा, खिडक्या बंद ठेवा."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Outdoor Workers",
+            "snippet": "Outdoor workers, including traffic police and construction labourers, should be provided N95 masks and rotated to reduce continuous exposure when AQI is Poor or worse. Employers should reschedule strenuous outdoor work to lower-pollution hours where feasible.",
+            "score": 0.575
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3984
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "outdoor_worker",
+        "language": "ta",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar இல் வெளிப்புற செயல்பாட்டைத் தவிர்க்கவும்",
+        "message": "AQI 432. காற்று ஆபத்தானது.",
+        "actions": [
+          "அனைத்து வெளிப்புற உடல் செயல்பாடுகளையும் தவிர்க்கவும்.",
+          "வெளியே செல்ல வேண்டுமானால் N95 முகக்கவசம் அணியவும்.",
+          "வீட்டில் காற்று சுத்திகரிப்பானைப் பயன்படுத்தவும்."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Outdoor Workers",
+            "snippet": "Outdoor workers, including traffic police and construction labourers, should be provided N95 masks and rotated to reduce continuous exposure when AQI is Poor or worse. Employers should reschedule strenuous outdoor work to lower-pollution hours where feasible.",
+            "score": 0.575
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3984
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "outdoor_worker",
+        "language": "bn",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar-এ বাইরের কার্যকলাপ এড়িয়ে চলুন",
+        "message": "AQI 432। বাতাস ক্ষতিকর।",
+        "actions": [
+          "সমস্ত বাইরের শারীরিক কার্যকলাপ এড়িয়ে চলুন।",
+          "বাইরে যেতে হলে N95 মাস্ক পরুন।",
+          "ঘরে এয়ার পিউরিফায়ার ব্যবহার করুন, জানালা বন্ধ রাখুন।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Outdoor Workers",
+            "snippet": "Outdoor workers, including traffic police and construction labourers, should be provided N95 masks and rotated to reduce continuous exposure when AQI is Poor or worse. Employers should reschedule strenuous outdoor work to lower-pollution hours where feasible.",
+            "score": 0.575
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3984
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "outdoor_worker",
+        "language": "te",
+        "aqi_band": "Severe",
+        "headline": "Anand Viharలో బహిరంగ కార్యకలాపాలను నివారించండి",
+        "message": "AQI 432. గాలి ప్రమాదకరం.",
+        "actions": [
+          "అన్ని బహిరంగ శారీరక కార్యకలాపాలను నివారించండి.",
+          "బయటకు వెళ్లాల్సి వస్తే N95 మాస్క్ ధరించండి.",
+          "ఇంట్లో ఎయిర్ ప్యూరిఫైయర్ వాడండి, కిటికీలు మూసి ఉంచండి."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Outdoor Workers",
+            "snippet": "Outdoor workers, including traffic police and construction labourers, should be provided N95 masks and rotated to reduce continuous exposure when AQI is Poor or worse. Employers should reschedule strenuous outdoor work to lower-pollution hours where feasible.",
+            "score": 0.575
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.3984
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "senior_citizen",
+        "language": "en",
+        "aqi_band": "Severe",
+        "headline": "Stay indoors — Anand Vihar",
+        "message": "AQI is 432. Outdoor air is hazardous for you.",
+        "actions": [
+          "Remain indoors with windows closed.",
+          "Use an air purifier if available.",
+          "Seek medical help if you feel breathless."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5214
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.4823
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "senior_citizen",
+        "language": "hi",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar में बाहरी गतिविधि से बचें",
+        "message": "AQI 432 है। हवा हानिकारक है।",
+        "actions": [
+          "सभी बाहरी शारीरिक गतिविधि से बचें।",
+          "बाहर जाना ज़रूरी हो तो N95 मास्क पहनें।",
+          "घर के अंदर एयर प्यूरीफायर चलाएँ, खिड़कियाँ बंद रखें।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5214
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.4823
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "senior_citizen",
+        "language": "mr",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar मध्ये बाहेरील हालचाल टाळा",
+        "message": "AQI 432 आहे. हवा घातक आहे.",
+        "actions": [
+          "सर्व बाहेरील शारीरिक हालचाल टाळा.",
+          "बाहेर जाणे आवश्यक असल्यास N95 मास्क वापरा.",
+          "घरात एअर प्युरिफायर वापरा, खिडक्या बंद ठेवा."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5214
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.4823
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "senior_citizen",
+        "language": "ta",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar இல் வெளிப்புற செயல்பாட்டைத் தவிர்க்கவும்",
+        "message": "AQI 432. காற்று ஆபத்தானது.",
+        "actions": [
+          "அனைத்து வெளிப்புற உடல் செயல்பாடுகளையும் தவிர்க்கவும்.",
+          "வெளியே செல்ல வேண்டுமானால் N95 முகக்கவசம் அணியவும்.",
+          "வீட்டில் காற்று சுத்திகரிப்பானைப் பயன்படுத்தவும்."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5214
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.4823
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "senior_citizen",
+        "language": "bn",
+        "aqi_band": "Severe",
+        "headline": "Anand Vihar-এ বাইরের কার্যকলাপ এড়িয়ে চলুন",
+        "message": "AQI 432। বাতাস ক্ষতিকর।",
+        "actions": [
+          "সমস্ত বাইরের শারীরিক কার্যকলাপ এড়িয়ে চলুন।",
+          "বাইরে যেতে হলে N95 মাস্ক পরুন।",
+          "ঘরে এয়ার পিউরিফায়ার ব্যবহার করুন, জানালা বন্ধ রাখুন।"
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5214
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.4823
+          }
+        ],
+        "grounded": true
+      },
+      {
+        "audience": "senior_citizen",
+        "language": "te",
+        "aqi_band": "Severe",
+        "headline": "Anand Viharలో బహిరంగ కార్యకలాపాలను నివారించండి",
+        "message": "AQI 432. గాలి ప్రమాదకరం.",
+        "actions": [
+          "అన్ని బహిరంగ శారీరక కార్యకలాపాలను నివారించండి.",
+          "బయటకు వెళ్లాల్సి వస్తే N95 మాస్క్ ధరించండి.",
+          "ఇంట్లో ఎయిర్ ప్యూరిఫైయర్ వాడండి, కిటికీలు మూసి ఉంచండి."
+        ],
+        "citations": [
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "AQI Categories and General Guidance",
+            "snippet": "- Good (0-50): Minimal impact. Air quality is satisfactory for all. - Satisfactory (51-100): Minor breathing discomfort to sensitive people. - Moderate (101-200): Breathing discomfort to people with lung and heart   disease. Sensitive groups should reduce prolonged outdoor exerti",
+            "score": 0.5214
+          },
+          {
+            "doc_id": "18e8f145062da78b",
+            "source": "CPCB_Health_Advisory.md",
+            "title": "CPCB Health Advisory",
+            "doc_type": "CPCB",
+            "page": 1,
+            "section": "Advisory for Sensitive Groups",
+            "snippet": "Children, pregnant women, the elderly, and persons with pre-existing respiratory or cardiac conditions should avoid all outdoor physical activity when AQI is in the Very Poor or Severe category. Keep windows closed during peak pollution hours and use N95/N99 masks if going outdoo",
+            "score": 0.4823
+          }
+        ],
+        "grounded": true
+      }
+    ]
+  }
+}

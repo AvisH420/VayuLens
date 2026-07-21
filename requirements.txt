@@ -1,0 +1,34 @@
+# Core runtime (always required)
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+pydantic-settings>=2.2
+PyYAML>=6.0
+rank-bm25>=0.2.2
+numpy>=1.26
+python-multipart>=0.0.9
+
+# --- Optional extras (install for production-grade quality) ---
+# Embeddings (transformer vectors): pip install -r requirements-embeddings.txt
+# sentence-transformers>=2.6
+# torch>=2.2
+#
+# Vector stores:
+# faiss-cpu>=1.8
+# chromadb>=0.5
+#
+# Document parsers:
+# pypdf>=4.2
+# python-docx>=1.1
+# beautifulsoup4>=4.12
+# lxml>=5.2
+#
+# OCR (scanned PDFs):
+# pytesseract>=0.3.10
+# pdf2image>=1.17
+# Pillow>=10.3
+#
+# LLM providers:
+# openai>=1.30
+# anthropic>=0.25
+# google-generativeai>=0.5

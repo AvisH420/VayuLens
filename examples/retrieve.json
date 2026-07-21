@@ -1,0 +1,51 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/retrieve",
+    "body": {
+      "query": "industrial closure unapproved fuel",
+      "top_k": 4
+    }
+  },
+  "response": {
+    "query": "industrial closure unapproved fuel",
+    "results": [
+      {
+        "text": "Under GRAP Stage IV, closure of all non-essential highly polluting industries\noperating on unapproved fuels is mandatory. Entry of trucks into the NCR is\nbanned except those carrying essential commodities or running on LNG/CNG/BS-VI\ndiesel or electric. Public, municipal, and private offices may operate at 50%\ncapacity with work-from-home for the rest. Construction and demolition is\ncompletely halted, including for essential public projects. State governments\nmay take a decision on closure of schools and colleges.",
+        "source": "GRAP_2023.md",
+        "doc_type": "GRAP",
+        "page": 1,
+        "section": "Stage IV — Severe Plus (AQI above 450)",
+        "score": 0.4602,
+        "method": "rerank"
+      },
+      {
+        "text": "Mandated switching of industries in the NCR from coal and pet-coke to piped\nnatural gas (PNG) reduced sulphur dioxide and particulate emissions from the\naffected industrial clusters. Compliance monitoring under the Air Act, 1981,\ncombined with closure directions for non-compliant units, was central to the\noutcome.",
+        "source": "Delhi_Interventions_2022.md",
+        "doc_type": "Intervention Report",
+        "page": 1,
+        "section": "Industrial Fuel Switching (2019-2021)",
+        "score": 0.4327,
+        "method": "rerank"
+      },
+      {
+        "text": "NCAP covers 131 non-attainment cities and million-plus cities that did not meet\nthe National Ambient Air Quality Standards (NAAQS) over a five-year period.\nEach city is required to prepare and implement a city-specific Clean Air Action\nPlan addressing sources such as road dust, vehicular emissions, industrial\nemissions, biomass burning, and construction dust.",
+        "source": "NCAP_2019.md",
+        "doc_type": "NCAP",
+        "page": 1,
+        "section": "Non-Attainment Cities",
+        "score": 0.2116,
+        "method": "rerank"
+      },
+      {
+        "text": "- Good (0-50): Minimal impact. Air quality is satisfactory for all.\n- Satisfactory (51-100): Minor breathing discomfort to sensitive people.\n- Moderate (101-200): Breathing discomfort to people with lung and heart\n  disease. Sensitive groups should reduce prolonged outdoor exertion.\n- Poor (201-300): Breathing discomfort to most people on prolonged exposure.\n- Very Poor (301-400): Respiratory illness on prolonged exposure. Avoid\n  outdoor physical activity.\n- Severe (401-500): Serious health impact even on healthy people; serious\n  effect on those with existing diseases.",
+        "source": "CPCB_Health_Advisory.md",
+        "doc_type": "CPCB",
+        "page": 1,
+        "section": "AQI Categories and General Guidance",
+        "score": 0.0286,
+        "method": "rerank"
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/ask",
+    "body": {
+      "question": "What restrictions apply to construction under GRAP Stage III?"
+    }
+  },
+  "response": {
+    "answer": "Under GRAP Stage III, there is a ban on construction and demolition activities\nin the entire NCR, except for essential projects such as railways, metro,\nairports, and national security. [1] Restrictions on BS-III petrol and\nBS-IV diesel light motor vehicles may be imposed. [1] Under GRAP Stage I, mechanized sweeping and water sprinkling of roads shall be\nenforced. [2] Post-intervention monitoring showed a measurable decline in coarse\nparticulate (PM10) at sites within 2 km of major construction clusters within\n72 hours, attributed primarily to reduced dust re-suspension. [3]",
+    "confidence": 0.6001,
+    "grounded": true,
+    "refused": false,
+    "citations": [
+      {
+        "doc_id": "42079e7b5790a42b",
+        "source": "GRAP_2023.md",
+        "title": "GRAP 2023",
+        "doc_type": "GRAP",
+        "page": 1,
+        "section": "Stage III — Severe (AQI 401-450)",
+        "snippet": "Under GRAP Stage III, there is a ban on construction and demolition activities in the entire NCR, except for essential projects such as railways, metro, airports, and national security. Non-essential C&D including excavation, boring, and drilling is prohibited. Brick kilns and ho",
+        "score": 0.676
+      },
+      {
+        "doc_id": "42079e7b5790a42b",
+        "source": "GRAP_2023.md",
+        "title": "GRAP 2023",
+        "doc_type": "GRAP",
+        "page": 1,
+        "section": "Stage I — Poor (AQI 201-300)",
+        "snippet": "Under GRAP Stage I, mechanized sweeping and water sprinkling of roads shall be enforced. Strict enforcement of dust control norms at construction and demolition (C&D) sites above 500 sq. m. is mandatory. Ban on open burning of solid waste and biomass. Enforce PUC (Pollution Under",
+        "score": 0.4091
+      },
+      {
+        "doc_id": "80a8e687d36b624e",
+        "source": "Delhi_Interventions_2022.md",
+        "title": "Delhi Interventions 2022",
+        "doc_type": "Intervention Report",
+        "page": 1,
+        "section": "Construction Ban under GRAP Stage III (November 2022)",
+        "snippet": "A ban on non-essential construction and demolition was invoked when AQI crossed 420. Post-intervention monitoring showed a measurable decline in coarse particulate (PM10) at sites within 2 km of major construction clusters within 72 hours, attributed primarily to reduced dust re-",
+        "score": 0.1838
+      }
+    ],
+    "retrieved_sources": [
+      "GRAP_2023.md",
+      "Delhi_Interventions_2022.md",
+      "CAQM_Dust_SOP.md",
+      "CPCB_Health_Advisory.md"
+    ],
+    "reasoning": "Grounded via qa over 5 reranked sources."
+  }
+}

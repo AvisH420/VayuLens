@@ -1,0 +1,28 @@
+# Production extras: transformer embeddings, real vector stores, parsers, LLMs.
+# Install:  pip install -r requirements-full.txt
+
+-r requirements.txt
+
+# Embeddings
+sentence-transformers>=2.6
+torch>=2.2
+
+# Vector stores
+faiss-cpu>=1.8
+chromadb>=0.5
+
+# Document parsers
+pypdf>=4.2
+python-docx>=1.1
+beautifulsoup4>=4.12
+lxml>=5.2
+
+# OCR
+pytesseract>=0.3.10
+pdf2image>=1.17
+Pillow>=10.3
+
+# LLM providers
+openai>=1.30
+anthropic>=0.25
+google-generativeai>=0.5

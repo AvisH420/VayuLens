@@ -1,0 +1,101 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/prioritize",
+    "body": {
+      "current_aqi": 432,
+      "targets": [
+        {
+          "target_id": "IC1",
+          "name": "Wazirpur Industrial Cluster",
+          "category": "industrial",
+          "pollution_contribution_pct": 35,
+          "population_exposed": 180000,
+          "hospitals_nearby": 2,
+          "schools_nearby": 8,
+          "forecast_trend": 20
+        },
+        {
+          "target_id": "CS1",
+          "name": "Dwarka Expressway Site",
+          "category": "construction",
+          "pollution_contribution_pct": 42,
+          "population_exposed": 90000,
+          "hospitals_nearby": 1,
+          "schools_nearby": 5,
+          "forecast_trend": 15
+        },
+        {
+          "target_id": "TC1",
+          "name": "ITO Traffic Corridor",
+          "category": "traffic",
+          "pollution_contribution_pct": 22,
+          "population_exposed": 300000,
+          "hospitals_nearby": 4,
+          "schools_nearby": 10,
+          "forecast_trend": 5
+        }
+      ]
+    }
+  },
+  "response": {
+    "aqi_band": "Severe",
+    "grap_stage": "Stage III",
+    "ranked_targets": [
+      {
+        "target_id": "TC1",
+        "name": "ITO Traffic Corridor",
+        "category": "traffic",
+        "priority": "high",
+        "score": 0.6395,
+        "rank": 1,
+        "rationale": "Prioritized due to 300,000 people exposed, 4 hospital(s) nearby, 10 school(s) nearby.",
+        "component_scores": {
+          "pollution_contribution": 0.22,
+          "population": 1.0,
+          "hospitals": 1.0,
+          "schools": 1.0,
+          "forecast_trend": 0.25,
+          "legal_urgency": 0.75
+        },
+        "legal_urgency": "enforce"
+      },
+      {
+        "target_id": "IC1",
+        "name": "Wazirpur Industrial Cluster",
+        "category": "industrial",
+        "priority": "high",
+        "score": 0.575,
+        "rank": 2,
+        "rationale": "Prioritized due to forecast worsening (+20 AQI), 8 school(s) nearby, high legal enforceability.",
+        "component_scores": {
+          "pollution_contribution": 0.35,
+          "population": 0.6,
+          "hospitals": 0.5,
+          "schools": 0.8,
+          "forecast_trend": 1.0,
+          "legal_urgency": 0.75
+        },
+        "legal_urgency": "enforce"
+      },
+      {
+        "target_id": "CS1",
+        "name": "Dwarka Expressway Site",
+        "category": "construction",
+        "priority": "medium",
+        "score": 0.432,
+        "rank": 3,
+        "rationale": "Prioritized due to forecast worsening (+15 AQI), high legal enforceability, 5 school(s) nearby.",
+        "component_scores": {
+          "pollution_contribution": 0.42,
+          "population": 0.3,
+          "hospitals": 0.25,
+          "schools": 0.5,
+          "forecast_trend": 0.75,
+          "legal_urgency": 0.75
+        },
+        "legal_urgency": "enforce"
+      }
+    ]
+  }
+}

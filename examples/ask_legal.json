@@ -1,0 +1,56 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/ask",
+    "body": {
+      "question": "Which industries must close under the Air Act when directed?",
+      "task": "legal"
+    }
+  },
+  "response": {
+    "answer": "Compliance monitoring under the Air Act, 1981,\ncombined with closure directions for non-compliant units, was central to the\noutcome. [1] Mandated switching of industries in the NCR from coal and pet-coke to piped\nnatural gas (PNG) reduced sulphur dioxide and particulate emissions from the\naffected industrial clusters. [1] Non-compliant sites are liable for environmental\ncompensation and closure directions under the Air Act, 1981 and the\nEnvironment (Protection) Act, 1986. [2] The Board may, in the exercise of its powers and performance of its functions\nunder this Act, issue any directions in writing to any person, officer, or\nauthority, including the power to direct the closure, prohibition, or\nregulation of any industry, operation, or process; or the stoppage or\nregulation of supply of electricity, water, or any other service. [3]",
+    "confidence": 0.4819,
+    "grounded": true,
+    "refused": false,
+    "citations": [
+      {
+        "doc_id": "80a8e687d36b624e",
+        "source": "Delhi_Interventions_2022.md",
+        "title": "Delhi Interventions 2022",
+        "doc_type": "Intervention Report",
+        "page": 1,
+        "section": "Industrial Fuel Switching (2019-2021)",
+        "snippet": "Mandated switching of industries in the NCR from coal and pet-coke to piped natural gas (PNG) reduced sulphur dioxide and particulate emissions from the affected industrial clusters. Compliance monitoring under the Air Act, 1981, combined with closure directions for non-compliant",
+        "score": 0.5274
+      },
+      {
+        "doc_id": "c87f3fb4c29d4fb4",
+        "source": "CAQM_Dust_SOP.md",
+        "title": "CAQM Dust SOP",
+        "doc_type": "CAQM",
+        "page": 1,
+        "section": "Monitoring and Registration",
+        "snippet": "All C&D sites of built-up area 500 sq. m. and above must register on the designated web portal and install self-monitoring dust sensors linked to the regulatory dashboard. Non-compliant sites are liable for environmental compensation and closure directions under the Air Act, 1981",
+        "score": 0.3811
+      },
+      {
+        "doc_id": "c1570cf25716e191",
+        "source": "Air_Act_1981.md",
+        "title": "Air Act 1981",
+        "doc_type": "Air Act",
+        "page": 1,
+        "section": "Section 31A — Power to give directions",
+        "snippet": "The Board may, in the exercise of its powers and performance of its functions under this Act, issue any directions in writing to any person, officer, or authority, including the power to direct the closure, prohibition, or regulation of any industry, operation, or process; or the",
+        "score": 0.2183
+      }
+    ],
+    "retrieved_sources": [
+      "Delhi_Interventions_2022.md",
+      "CAQM_Dust_SOP.md",
+      "Air_Act_1981.md",
+      "GRAP_2023.md",
+      "NCAP_2019.md"
+    ],
+    "reasoning": "Grounded via legal_reasoning over 5 reranked sources."
+  }
+}

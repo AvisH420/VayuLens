@@ -1,0 +1,52 @@
+{
+  "samples": [
+    {
+      "question": "What construction restrictions apply under GRAP Stage III?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["GRAP_2023.md"],
+      "ground_truth": "Under GRAP Stage III, non-essential construction and demolition is banned across the NCR, except for essential projects such as railways, metro, airports and national security."
+    },
+    {
+      "question": "What happens to trucks entering NCR under GRAP Stage IV?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["GRAP_2023.md"],
+      "ground_truth": "Entry of trucks into the NCR is banned except those carrying essential commodities or running on LNG/CNG/BS-VI diesel or electric."
+    },
+    {
+      "question": "What is the penalty for failing to comply with directions issued by the Board?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["Air_Act_1981.md"],
+      "ground_truth": "Imprisonment of not less than one year and six months, extendable to six years, with fine, and additional fine if the failure continues."
+    },
+    {
+      "question": "What dust control measures are mandatory at construction sites?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["CAQM_Dust_SOP.md"],
+      "ground_truth": "Wind-breaking barriers, dust screens, water sprinkling, covered storage and transport, wheel-washing, and anti-smog guns at larger sites."
+    },
+    {
+      "question": "What is the target of the National Clean Air Programme?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["NCAP_2019.md"],
+      "ground_truth": "A 40% reduction in PM10 concentration by 2025-26 for cities under the programme (originally 20-40% reduction of PM2.5 and PM10 by 2024)."
+    },
+    {
+      "question": "What should hospitals do during a severe air quality episode?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["CPCB_Health_Advisory.md"],
+      "ground_truth": "Anticipate increased respiratory and cardiac admissions and ensure adequate stock of nebulisers, oxygen and medication."
+    },
+    {
+      "question": "How effective was the construction ban in Delhi in November 2022?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["Delhi_Interventions_2022.md"],
+      "ground_truth": "A measurable decline in coarse particulate (PM10) at sites within 2 km of major construction clusters within 72 hours."
+    },
+    {
+      "question": "Which industries must close under the Air Act when directed?",
+      "relevant_doc_ids": [],
+      "expected_docs": ["Air_Act_1981.md"],
+      "ground_truth": "Under Section 31A the Board may direct closure, prohibition or regulation of any industry, operation or process."
+    }
+  ]
+}
