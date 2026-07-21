@@ -112,6 +112,34 @@ class OSMConnector(BaseConnector):
         except Exception:
             pass
 
+        # Query 4: Construction areas
+        const_query = f"""
+        [out:json][timeout:60];
+        (
+          way["landuse"="construction"]({bbox_str});
+          relation["landuse"="construction"]({bbox_str});
+        );
+        out center;
+        """
+        self._throttle()
+        try:
+            resp = requests.post(cfg.OVERPASS_URL, data={"data": const_query}, timeout=90)
+            resp.raise_for_status()
+            for el in resp.json().get("elements", []):
+                center = el.get("center", {})
+                lat = center.get("lat") or el.get("lat")
+                lon = center.get("lon") or el.get("lon")
+                if lat is None:
+                    continue
+                records.append({
+                    "source": "osm",
+                    "feature_type": "construction",
+                    "lat": lat,
+                    "lon": lon,
+                })
+        except Exception:
+            pass
+
         return records
 
     def _pull_mock(
@@ -174,6 +202,22 @@ class OSMConnector(BaseConnector):
                         "lat": round(lat, 4),
                         "lon": round(lon, 4),
                         "name": f"Industrial Zone {int(_rng(s+3)*100)}",
+                    })
+
+                # Construction density mock (0.0 to 1.0 proxy)
+                const_density = 0.0
+                if landuse == "commercial" and _rng(s + 4) < 0.2:
+                    const_density = round(_rng(s + 5) * 0.4, 2)
+                elif landuse == "residential" and _rng(s + 6) < 0.1:
+                    const_density = round(_rng(s + 7) * 0.2, 2)
+
+                if const_density > 0:
+                    records.append({
+                        "source": "osm",
+                        "feature_type": "construction",
+                        "lat": round(lat, 4),
+                        "lon": round(lon, 4),
+                        "density": const_density,
                     })
 
                 lon += step
