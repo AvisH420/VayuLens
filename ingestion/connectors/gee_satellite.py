@@ -30,10 +30,12 @@ class GEESatelliteConnector(BaseConnector):
         min_lon, min_lat, max_lon, max_lat = bbox
         region = ee.Geometry.Rectangle([min_lon, min_lat, max_lon, max_lat])
 
-        # Satellites have a 24-48hr processing latency.
-        # We look back up to 3 days to grab the most recent pass available,
-        # which provides the spatial baseline for today's forecast.
-        search_start = until - timedelta(days=3)
+        # Satellites have processing latency that varies by product: Sentinel-5P
+        # NRTI/OFFL lands within ~1-3 days, but MODIS MCD19A2 AOD granules can
+        # lag 5+ days. A 3-day window regularly returns zero MODIS images (and
+        # thus no AOD at all), so look back 10 days and take the most recent
+        # available pass as the spatial baseline.
+        search_start = until - timedelta(days=10)
         start_str = search_start.strftime("%Y-%m-%d")
         end_str = until.strftime("%Y-%m-%d")
 
