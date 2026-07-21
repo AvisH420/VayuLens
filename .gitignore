@@ -1,0 +1,18 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local configuration / Agent directories
+.gemini/
+.agents/
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
