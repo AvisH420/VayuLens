@@ -1,0 +1,15 @@
+# Deployment dependencies for the API gateway ONLY.
+#
+# The gateway serves every route from api/demo_engine.py, which imports
+# nothing outside the standard library (math, re, typing). contracts/ needs
+# only pydantic. So the deployed service needs three packages, not the 20 in
+# the repo-root requirements.txt -- that file covers the full research stack
+# (earthengine-api, geopandas, rasterio, chromadb, sentence-transformers) and
+# would take ~10 minutes to build and exhaust memory on a free tier.
+#
+# When a real module (attribution/, forecasting/, rag/) is wired into a route,
+# add just that module's runtime deps here.
+
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
