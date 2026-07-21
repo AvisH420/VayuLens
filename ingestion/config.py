@@ -153,5 +153,8 @@ GEE_COLLECTIONS = {
     "s5p_aer":  "COPERNICUS/S5P/OFFL/L3_AER_AI",
     "s5p_co":   "COPERNICUS/S5P/OFFL/L3_CO",
     "s5p_so2":  "COPERNICUS/S5P/OFFL/L3_SO2",
-    "modis_aod": "MODIS/061/MCD19A2",
+    # MCD19A2 (the non-granule id) is superseded and resolves to an empty
+    # collection in Earth Engine — AOD silently never loads. The _GRANULES
+    # asset is the live one.
+    "modis_aod": "MODIS/061/MCD19A2_GRANULES",
 }
