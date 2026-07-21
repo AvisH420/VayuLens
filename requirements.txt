@@ -22,6 +22,7 @@ statsmodels>=0.14        # forecasting baselines
 # ── Role 3: rag / decision ────────────────────────────────────────────
 anthropic>=0.39          # grounded generation + agentic recommendations (Claude)
 langchain>=0.2           # RAG orchestration
+pyyaml>=6.0              # rag/config.py loads YAML settings (hard dep)
 chromadb>=0.5            # optional chroma vector store
 sentence-transformers>=2.6 # embeddings (heavy — optional per environment)
 pypdf>=4.0               # document ingestion / PDF text extraction

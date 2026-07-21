@@ -58,11 +58,13 @@ class ClaudeProvider(LLMProvider):
         self._cfg = cfg
 
     def generate(self, system, user, *, temperature=None, max_tokens=None) -> str:
+        # Current Claude models (Opus 4.8, Sonnet 5, ...) reject `temperature`
+        # with a 400 — it was removed from the API. Steer with the prompt
+        # instead; do not pass sampling params.
         resp = self._client.messages.create(
             model=self._cfg.model,
             system=system,
             max_tokens=self._cfg.max_tokens if max_tokens is None else max_tokens,
-            temperature=self._cfg.temperature if temperature is None else temperature,
             messages=[{"role": "user", "content": user}],
         )
         return "".join(
@@ -195,9 +197,11 @@ def build_llm(cfg: LLMCfg) -> LLMProvider:
         return ExtractiveProvider()
     try:
         return _REGISTRY[provider](cfg)
-    except (ImportError, Exception) as e:  # noqa: BLE001
+    except ImportError as e:
+        # The provider's SDK isn't installed — this is the intended offline
+        # fallback (the whole stack still runs on the extractive provider).
         log.warning(
-            "LLM provider '%s' unavailable (%s); falling back to extractive.",
+            "LLM provider '%s' package not installed (%s); falling back to extractive.",
             provider, e,
         )
         return ExtractiveProvider()

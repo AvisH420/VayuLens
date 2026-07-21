@@ -46,7 +46,8 @@ processed/
 *.geojson
 *.shp
 *.zip
-vector_store/
+# persisted vector index (rag stores to storage/vectors/)
+storage/
 *.sqlite
 *.db
 
