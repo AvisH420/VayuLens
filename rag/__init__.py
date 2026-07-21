@@ -1,1 +1,4 @@
-"""Role 3: rag — document ingestion, vector store, retriever, grounded generation, eval."""
+from rag.config import Settings, get_settings, load_settings
+from rag.pipeline import RAGPipeline, get_pipeline
+
+__all__ = ["RAGPipeline", "get_pipeline", "Settings", "get_settings", "load_settings"]
