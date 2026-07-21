@@ -89,5 +89,5 @@ def generate_forecast(
         
     return ForecastResponse(
         forecasts=forecast_cells,
-        forecast_horizon_hours=horizon_horizon_hours if 'forecast_horizon_hours' in locals() else horizon_hours
+        forecast_horizon_hours=horizon_hours,
     )
