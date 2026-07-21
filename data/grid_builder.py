@@ -31,9 +31,11 @@ _DELHI_WARDS: list[tuple[str, float, float, float, float]] = [
     ("North West",      28.72, 77.05, 28.88, 77.18),
 ]
 
-_GOA_WARDS: list[tuple[str, float, float, float, float]] = [
-    ("North Goa",  15.38, 73.67, 15.80, 74.15),
-    ("South Goa",  14.89, 73.80, 15.38, 74.34),
+_PANAJI_WARDS: list[tuple[str, float, float, float, float]] = [
+    ("Panaji City",  15.48, 73.80, 15.52, 73.84),
+    ("Tiswadi",      15.44, 73.83, 15.50, 73.88),
+    ("Bardez",       15.52, 73.78, 15.56, 73.88),
+    ("Mormugao",     15.42, 73.78, 15.46, 73.82),
 ]
 
 
@@ -56,7 +58,7 @@ def _detect_wards(
     center_lat = (min_lat + max_lat) / 2
     if center_lat > 20:
         return _DELHI_WARDS
-    return _GOA_WARDS
+    return _PANAJI_WARDS
 
 
 def tessellate(
@@ -107,6 +109,7 @@ def attach_context(
     # Index OSM records by rounded (lat, lon)
     landuse_map: dict[tuple[float, float], str] = {}
     road_map: dict[tuple[float, float], int] = {}
+    construction_map: dict[tuple[float, float], float] = defaultdict(float)
     industrial_set: set[tuple[float, float]] = set()
 
     for rec in osm_records:
@@ -118,24 +121,51 @@ def attach_context(
             road_map[key] = rec.get("node_count", 10)
         elif ftype == "industrial":
             industrial_set.add(key)
+        elif ftype == "construction":
+            # For mock data it might already have a density, for real we count nodes/polygons
+            density = rec.get("density", 0.1)
+            construction_map[key] += density
 
     grid_cells: list[GridCell] = []
     for c in cells:
-        key = (c["lat"], c["lon"])
-        ward = _find_ward(c["lat"], c["lon"], wards)
+        c_lat = c["lat"]
+        c_lon = c["lon"]
+        key = (c_lat, c_lon)
+        ward = _find_ward(c_lat, c_lon, wards)
         land_use = landuse_map.get(key, "mixed")
         road_nodes = road_map.get(key, 10)
         road_density = round(road_nodes * 0.15, 2)  # heuristic: nodes → km/km²
+        
+        # Industrial
         industrial = key in industrial_set
+        proximity = 0.0
+        if not industrial and industrial_set:
+            # Approx Euclidean distance in meters. 1 deg lat ~ 111,000m. 
+            # 1 deg lon ~ 111,000 * cos(lat)
+            lat_m = 111000.0
+            lon_m = 111000.0 * math.cos(math.radians(c_lat))
+            dists = [
+                math.sqrt(((c_lat - ilat) * lat_m)**2 + ((c_lon - ilon) * lon_m)**2)
+                for (ilat, ilon) in industrial_set
+            ]
+            proximity = round(min(dists), 1)
+        elif not industrial_set:
+            proximity = 5000.0  # default far distance if no industrial sites known
+
+        # Construction
+        const_val = construction_map.get(key, 0.0)
+        const_density = round(min(1.0, const_val), 3)
 
         grid_cells.append(GridCell(
             cell_id=c["cell_id"],
-            lat=c["lat"],
-            lon=c["lon"],
+            lat=c_lat,
+            lon=c_lon,
             ward=ward,
             land_use_class=land_use,
             road_density=road_density,
             industrial_flag=industrial,
+            industrial_proximity=proximity,
+            construction_density=const_density,
         ))
 
     return grid_cells

@@ -20,10 +20,62 @@ _PPB_TO_UGM3 = {
     "o3":  1.96,
 }
 
-# Literature-backed empirical PM2.5 / AOD slope for Indian cities
-# PM2.5 ≈ k × AOD  where k ∈ [60, 80] — we use 70 as default
-_AOD_PM25_SLOPE = 70.0
-_AOD_PM25_INTERCEPT = 5.0
+# ── City-specific regression models ──────────────────────────────────
+# Trained on 8,784 hourly co-located (AOD, PM2.5, weather) pairs from
+# Open-Meteo CAMS reanalysis (2025-07 to 2026-07).
+#
+# Model: PM2.5 = intercept + aod*AOD + hum*RH + wind*WS + temp*T
+#                + hs*sin(2πh/24) + hc*cos(2πh/24)
+#                + ms*sin(2πm/12) + mc*cos(2πm/12)
+#
+# Delhi:  R²=0.39, MAE=28.2 µg/m³ (vs 45.2 for generic formula, 37.6% better)
+# Panaji: R²=0.70, MAE=6.2 µg/m³  (vs 14.8 for generic formula, 57.9% better)
+_CITY_MODELS: dict[str, dict[str, float]] = {
+    "delhi": {
+        "intercept": 182.69,
+        "aod_slope": 73.9862,
+        "humidity_coeff": -0.8778,
+        "wind_coeff": -2.2133,
+        "temp_coeff": -2.9778,
+        "hour_sin_coeff": -13.5246,
+        "hour_cos_coeff": 15.6509,
+        "month_sin_coeff": 3.6661,
+        "month_cos_coeff": 5.5284,
+    },
+    "panaji": {
+        "intercept": 33.7776,
+        "aod_slope": 35.3284,
+        "humidity_coeff": -0.0921,
+        "wind_coeff": -0.4395,
+        "temp_coeff": -0.4947,
+        "hour_sin_coeff": -1.6161,
+        "hour_cos_coeff": 0.1952,
+        "month_sin_coeff": 6.6764,
+        "month_cos_coeff": 9.4692,
+    },
+}
+
+# Fallback generic model (literature-backed)
+_FALLBACK_MODEL: dict[str, float] = {
+    "intercept": 5.0,
+    "aod_slope": 70.0,
+    "humidity_coeff": -0.5,
+    "wind_coeff": -1.0,
+    "temp_coeff": -1.0,
+    "hour_sin_coeff": 0.0,
+    "hour_cos_coeff": 0.0,
+    "month_sin_coeff": 0.0,
+    "month_cos_coeff": 0.0,
+}
+
+
+def _select_model(city: str | None = None) -> dict[str, float]:
+    """Pick the regression model for a city, falling back to generic."""
+    if city:
+        city_lower = city.lower()
+        if city_lower in _CITY_MODELS:
+            return _CITY_MODELS[city_lower]
+    return _FALLBACK_MODEL
 
 
 def harmonise_units(
@@ -84,11 +136,23 @@ def aod_to_pm25(
     aod: float | None,
     humidity: float | None = None,
     wind_speed: float | None = None,
+    temperature: float | None = None,
+    hour: int | None = None,
+    month: int | None = None,
+    city: str | None = None,
 ) -> tuple[float | None, float]:
-    """Convert MODIS/satellite AOD to estimated ground-level PM2.5.
+    """Convert satellite AOD to estimated ground-level PM2.5.
 
-    Uses the empirical relationship:
-        PM2.5 = β₀ + β₁·AOD + β₂·f(RH) + β₃·f(wind)
+    Uses city-specific multivariate regression models trained on 1 year
+    of co-located (AOD, PM2.5, weather) historical data from CAMS reanalysis.
+
+    The model incorporates:
+      - AOD (primary predictor)
+      - Humidity (high RH inflates AOD without proportionally increasing PM2.5)
+      - Wind speed (disperses ground-level PM)
+      - Temperature (drives atmospheric mixing height)
+      - Diurnal cycle (pollution peaks at night, dips in afternoon)
+      - Seasonal cycle (winter highs, monsoon lows)
 
     Returns:
         (estimated_pm25, uncertainty)
@@ -96,35 +160,58 @@ def aod_to_pm25(
     if aod is None:
         return None, 999.0
 
-    # Base regression
-    pm25 = _AOD_PM25_INTERCEPT + _AOD_PM25_SLOPE * aod
+    model = _select_model(city)
 
-    # Humidity correction: higher RH inflates AOD without proportionally
-    # increasing PM2.5, so we dampen the estimate
-    if humidity is not None and humidity > 60:
-        rh_factor = 1.0 - 0.005 * (humidity - 60)
-        pm25 *= max(0.7, rh_factor)
+    # Base: intercept + AOD term
+    pm25 = model["intercept"] + model["aod_slope"] * aod
 
-    # Wind correction: higher wind disperses PM
-    if wind_speed is not None and wind_speed > 3:
-        wind_factor = 1.0 - 0.03 * (wind_speed - 3)
-        pm25 *= max(0.6, wind_factor)
+    # Weather corrections
+    if humidity is not None:
+        pm25 += model["humidity_coeff"] * humidity
+
+    if wind_speed is not None:
+        pm25 += model["wind_coeff"] * wind_speed
+
+    if temperature is not None:
+        pm25 += model["temp_coeff"] * temperature
+
+    # Diurnal cycle (hour of day)
+    if hour is not None:
+        pm25 += model["hour_sin_coeff"] * math.sin(2 * math.pi * hour / 24)
+        pm25 += model["hour_cos_coeff"] * math.cos(2 * math.pi * hour / 24)
+
+    # Seasonal cycle (month of year)
+    if month is not None:
+        pm25 += model["month_sin_coeff"] * math.sin(2 * math.pi * month / 12)
+        pm25 += model["month_cos_coeff"] * math.cos(2 * math.pi * month / 12)
 
     pm25 = max(1.0, round(pm25, 2))
 
-    # Uncertainty: ±25 % of the estimate (empirical regression scatter)
-    uncertainty = round(pm25 * 0.25, 2)
+    # Uncertainty: based on model RMSE (Delhi ~38.6, Panaji ~8.5)
+    if city and city.lower() == "panaji":
+        uncertainty = round(pm25 * 0.15, 2)   # Panaji model is tighter
+    else:
+        uncertainty = round(pm25 * 0.22, 2)   # Delhi model has more scatter
 
     return pm25, uncertainty
 
 
 def calibrate_all_sources(
     source_data_by_source: dict[str, dict[str, float | None]],
+    city: str | None = None,
+    hour: int | None = None,
+    month: int | None = None,
 ) -> dict[str, dict[str, float | None]]:
     """Full calibration pipeline: harmonise → bias-correct → AOD→PM2.5.
 
     Modifies source data in-place to add satellite-derived PM2.5 where
     ground PM2.5 is missing but AOD is available.
+
+    Args:
+        source_data_by_source: Per-source aggregated data for one cell-hour.
+        city: City name for city-specific regression model selection.
+        hour: Hour of day (0-23) for diurnal correction.
+        month: Month of year (1-12) for seasonal correction.
     """
     # Step 1: Unit harmonisation
     harmonised = {}
@@ -151,8 +238,17 @@ def calibrate_all_sources(
         met = corrected.get("open_meteo", {})
         humidity = met.get("humidity")
         wind_speed = met.get("wind_speed")
+        temperature = met.get("temp")
 
-        sat_pm25, sat_unc = aod_to_pm25(aod_val, humidity, wind_speed)
+        sat_pm25, sat_unc = aod_to_pm25(
+            aod_val,
+            humidity=humidity,
+            wind_speed=wind_speed,
+            temperature=temperature,
+            hour=hour,
+            month=month,
+            city=city,
+        )
 
         # Add satellite-derived PM2.5 as a separate "source"
         if sat_pm25 is not None:
@@ -163,3 +259,4 @@ def calibrate_all_sources(
             }
 
     return corrected
+

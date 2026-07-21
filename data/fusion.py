@@ -44,6 +44,9 @@ def fuse_cell(
     aod   = _first_available("aod", calibrated_by_source)
     ai    = _first_available("aerosol_index", calibrated_by_source)
 
+    # Missing gaseous pollutants
+    so2   = _weighted_mean("so2",  calibrated_by_source)
+
     # Meteorology (single source — Open-Meteo)
     met = calibrated_by_source.get("open_meteo", {})
     temp       = met.get("temp")
@@ -83,17 +86,25 @@ def fuse_cell(
     else:
         uncertainty = 999.0
 
+    def _clean_pollutant(v: float | None) -> float | None:
+        if v is None or v < 0:
+            return None
+        return round(v, 2)
+
     return Measurement(
         cell_id=cell.cell_id,
+        lat=cell.lat,
+        lon=cell.lon,
         timestamp=timestamp,
-        pm25=_round_or_none(pm25),
-        pm10=_round_or_none(pm10),
-        no2=_round_or_none(no2),
+        pm25=_clean_pollutant(pm25),
+        pm10=_clean_pollutant(pm10),
+        no2=_clean_pollutant(no2),
+        so2=_clean_pollutant(so2),
         aod=_round_or_none(aod, 4),
-        aerosol_index=_round_or_none(ai, 2),
+        uv_aerosol_index=_round_or_none(ai, 2),
         temp=_round_or_none(temp, 1),
         wind_speed=_round_or_none(wind_speed, 1),
-        wind_dir=_round_or_none(wind_dir, 1),
+        wind_direction=_round_or_none(wind_dir, 1),
         quality_score=quality_score,
         uncertainty=uncertainty,
     )

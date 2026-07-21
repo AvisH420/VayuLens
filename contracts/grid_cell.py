@@ -15,3 +15,5 @@ class GridCell(BaseModel):
     land_use_class: str = Field(..., description="Dominant land use: residential | commercial | industrial | green | mixed.")
     road_density: float = Field(..., description="Road length per unit area (km/km^2).")
     industrial_flag: bool = Field(..., description="True if the cell contains a registered industrial source.")
+    industrial_proximity: float = Field(..., description="Approximate distance (in meters) to nearest industrial source.")
+    construction_density: float = Field(..., description="Density of construction sites in the cell.")

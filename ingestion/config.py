@@ -73,12 +73,10 @@ CPCB_CCR_URL = "https://app.cpcbccr.com/ccr/"
 
 # ── Target cities: (min_lon, min_lat, max_lon, max_lat) ───────────────
 # Bounds mirror api/demo_engine.py so the ingested grid lines up with the
-# grid the dashboard renders.  "goa" is kept as an alias for "panaji": the
-# full-state box tessellates to ~7 650 cells, far more than the city view needs.
+# grid the dashboard renders.
 CITY_BBOX: dict[str, tuple[float, float, float, float]] = {
     "delhi": (76.92, 28.42, 77.38, 28.82),
     "panaji": (73.76, 15.42, 73.90, 15.56),
-    "goa": (73.76, 15.42, 73.90, 15.56),
 }
 
 

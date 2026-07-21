@@ -105,6 +105,7 @@ def fuse(
     grid: list[GridCell],
     calibrated_by_source: dict[str, list[dict]],
     timestamp: datetime,
+    city: str | None = None,
 ) -> list[Measurement]:
     """Fuse multi-source calibrated data onto the grid for one timestamp.
 
@@ -112,6 +113,7 @@ def fuse(
         grid: The analysis grid from ``build_grid``.
         calibrated_by_source: Calibrated records keyed by source name.
         timestamp: The observation time to produce measurements for (UTC).
+        city: City name for city-specific AOD→PM2.5 regression.
 
     Returns:
         One ``Measurement`` per grid cell, with ``quality_score`` and
@@ -156,7 +158,12 @@ def fuse(
         if records_this_hour:
             by_source = alignment.aggregate_by_source(records_this_hour)
             # Step 4: Calibrate (bias correct across sources)
-            calibrated_sources = calibration.calibrate_all_sources(by_source)
+            calibrated_sources = calibration.calibrate_all_sources(
+                by_source,
+                city=city,
+                hour=timestamp.hour,
+                month=timestamp.month,
+            )
             aligned_data[cell_id] = calibrated_sources
 
     logger.info("Cells with aligned data: %d / %d", len(aligned_data), len(grid))
@@ -167,7 +174,7 @@ def fuse(
     logger.info("Fused %d measurements (%d with PM2.5 data)", len(measurements), fused_with_data)
 
     # Step 6: Gap-fill
-    measurements = gap_filling.fill_gaps(measurements)
+    measurements = gap_filling.fill_gaps(measurements, max_distance_km=50.0)
     filled_count = sum(1 for m in measurements if m.pm25 is not None) - fused_with_data
     logger.info("Gap-filled %d additional cells", max(0, filled_count))
 
@@ -213,8 +220,8 @@ def run_pipeline(
         except Exception as exc:
             logger.warning("Source %s failed: %s — skipping", src, exc)
 
-    # 3. Fuse for the most recent hour
-    measurements = fuse(grid, calibrated_by_source, until)
+    # 3. Fuse for the most recent hour (using city-specific regression)
+    measurements = fuse(grid, calibrated_by_source, until, city=city_id)
 
     logger.info(
         "=== Pipeline complete: %d cells, %d measurements ===",
