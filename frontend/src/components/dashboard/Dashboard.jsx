@@ -12,6 +12,7 @@ import ChatPanel from "../chat/ChatPanel.jsx";
 import ForecastSlider from "../forecast/ForecastSlider.jsx";
 import LensCursor from "../cursor/LensCursor.jsx";
 import { buildCity } from "../../lib/mock.js";
+import { getGrid } from "../../lib/api.js";
 import { AQI_BANDS, SOURCES } from "../../lib/aqi.js";
 import "./dashboard.css";
 
@@ -32,11 +33,28 @@ export default function Dashboard() {
   const [whatifOpen, setWhatifOpen] = useState(params.get("panel") === "whatif");
   const [chatOpen, setChatOpen] = useState(params.get("panel") === "chat");
 
-  // both grids live on the map at once; cityId just tracks the viewport
-  const cities = useMemo(
-    () => ({ delhi: buildCity("delhi"), panaji: buildCity("panaji") }),
-    []
-  );
+  // Both grids live on the map at once; cityId just tracks the viewport.
+  // Start with the instant client-side build so the map paints immediately,
+  // then swap in the grid from the API (real snapshot data when
+  // VITE_USE_MOCKS=false; identical mock otherwise). On error we keep the
+  // initial build, so the dashboard never blanks.
+  const [cities, setCities] = useState(() => ({
+    delhi: buildCity("delhi"),
+    panaji: buildCity("panaji"),
+  }));
+
+  useEffect(() => {
+    let alive = true;
+    Promise.all([getGrid("delhi"), getGrid("panaji")])
+      .then(([delhi, panaji]) => {
+        if (alive && delhi && panaji) setCities({ delhi, panaji });
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   const city = cities[cityId];
 
   // a selected cell may belong to either city
