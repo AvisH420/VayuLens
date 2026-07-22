@@ -168,13 +168,28 @@ def main() -> None:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     print(f"data source: {'MOCK' if cfg.USE_MOCK else 'LIVE'}")
+
+    # Build each city independently: a transient source outage that spoils one
+    # city (or run) should not crash the whole job and lose the other's fresh
+    # data. Any city that fails keeps its previously committed snapshot. Exit
+    # non-zero only if *every* city failed, so the Action flags a total outage
+    # but tolerates a partial refresh.
+    ok = 0
     for city in cities:
         t0 = datetime.now()
-        snap = build_city_snapshot(city)
+        try:
+            snap = build_city_snapshot(city)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  {city}: FAILED ({exc}); keeping previous snapshot.")
+            continue
         (out / f"{city}.json").write_text(json.dumps(snap), encoding="utf-8")
+        ok += 1
         print(f"  {city}: avgAQI {snap['avgAqi']}  "
               f"({len(snap['cells'])} cells, {(datetime.now()-t0).seconds}s) "
               f"-> {out/f'{city}.json'}")
+
+    if ok == 0:
+        raise SystemExit("All cities failed to build — no snapshot written.")
 
 
 if __name__ == "__main__":
