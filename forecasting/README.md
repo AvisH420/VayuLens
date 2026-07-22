@@ -1,25 +1,18 @@
-# forecasting/ — Dispersion model, 24-72h forecast & scenario simulation
+# forecasting/
 
-**Owner:** Role 2 (Modeling)
-**Builds against:** [`contracts/measurement.py`](../contracts/measurement.py), [`contracts/grid_cell.py`](../contracts/grid_cell.py), [`contracts/forecast.py`](../contracts/forecast.py)
+Answers *"where is this pollution going?"* and *"what if we intervened?"*.
 
-## Purpose
+## Components
 
-Answer *"where is this pollution going?"*. A dispersion model produces 24-72h
-AQI forecasts per cell, and `simulate(scenario)` powers the frontend what-if
-panel with counterfactual runs.
+- **`dispersion.py`** — a Gaussian-plume dispersion model with Pasquill-Gifford coefficients that
+  projects how emissions from one cell travel downwind to another.
+- **`predictor.py`** — produces the per-cell 72-hour AQI trajectory from a diurnal + wind-driven model,
+  converting PM2.5 to the CPCB AQI (`pm25_to_aqi`).
+- **`simulator.py`** — the policy what-if engine. It builds a source-to-receptor contribution matrix and
+  **normalises it so contributions reconstruct each cell's real concentration** (avoiding
+  double-counting), then applies an intervention's emission cuts and re-disperses — yielding realistic,
+  defensible AQI deltas.
+- **`models.py`** — forecast and simulation schemas.
 
-## Inputs
-
-- Recent `Measurement` history (from [`data/`](../data/README.md)).
-- `GridCell` mesh.
-- A `scenario` dict for counterfactual runs.
-
-## Outputs
-
-- `Forecast` records (per-cell `horizon[{t, aqi}]`) consumed by
-  [`decision/`](../decision/README.md), [`api/`](../api/README.md), and the frontend.
-
-## Key module
-
-- `model.py` — `forecast_cell`, `forecast_grid`, `simulate`.
+**Input:** `Measurement` history + grid. **Output:** [`Forecast`](../contracts/forecast.py) horizons and
+per-cell simulation results.

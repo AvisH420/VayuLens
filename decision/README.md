@@ -1,29 +1,16 @@
-# decision/ — Agentic recommendations, enforcement priority, multi-language advisories
+# decision/
 
-**Owner:** Role 3 (Knowledge & Agents)
-**Builds against:** [`contracts/attribution.py`](../contracts/attribution.py), [`contracts/forecast.py`](../contracts/forecast.py), [`contracts/recommendation.py`](../contracts/recommendation.py); uses [`rag/`](../rag/README.md)
+Turns *insight* into *action*. Fuses attribution and forecast with the grounded knowledge base to
+recommend concrete, regulation-cited interventions, rank them for enforcement, and communicate them to
+the public.
 
-## Purpose
+## Components
 
-Turn *insight* into *action*. An agentic layer fuses attribution + forecast with
-the grounded knowledge base to recommend concrete, regulation-cited
-interventions, rank them for enforcement, and communicate them to the public in
-multiple languages.
+- **`recommendation_engine/`** — produces prioritised, regulation-backed actions for a cell, ranked by an
+  enforcement `priority_score`.
+- **`advisory_engine/`** — plain-language, audience-specific public advisories (e.g. schools, outdoor
+  workers, at-risk groups) generated from the live grid.
+- **`schemas/`, `utils/`** — request/response models and AQI helpers.
 
-- **Agentic recommendations** — what to do, justified and cited.
-- **Enforcement priority** — rank actions by `priority_score`.
-- **Multi-language advisories** — localize public-facing messaging.
-
-## Inputs
-
-- `Attribution` (from [`attribution/`](../attribution/README.md)).
-- `Forecast` (from [`forecasting/`](../forecasting/README.md)).
-- Grounded answers/citations from [`rag/`](../rag/README.md).
-
-## Outputs
-
-- `Recommendation` records consumed by [`api/`](../api/README.md) and the frontend.
-
-## Key module
-
-- `agent.py` — `recommend`, `prioritize`, `localize`.
+**Input:** `Attribution`, `Forecast`, and grounded answers from [`rag/`](../rag/).
+**Output:** [`Recommendation`](../contracts/recommendation.py) records.

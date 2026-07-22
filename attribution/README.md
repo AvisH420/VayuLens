@@ -1,24 +1,27 @@
-# attribution/ — Source-attribution engine
+# attribution/
 
-**Owner:** Role 2 (Modeling)
-**Builds against:** [`contracts/measurement.py`](../contracts/measurement.py), [`contracts/grid_cell.py`](../contracts/grid_cell.py), [`contracts/attribution.py`](../contracts/attribution.py)
+Answers *"where is this pollution coming from?"* for each grid cell. Apportions a cell's PM2.5 across
+six source classes — traffic, construction, industry, biomass burning, dust and other — with a
+confidence score.
 
-## Purpose
+## How it works
 
-Answer *"where is this pollution coming from?"* for each cell. Apportions
-measured concentrations to source classes — traffic, construction, industry,
-burning, dust — with a confidence score.
+Chemical and land-use proxies are normalised onto a common scale before they are combined, so sources
+measured in very different units are comparable:
 
-## Inputs
+- **NO₂ × road density** → traffic
+- **SO₂ × industrial proximity** → industry
+- **UV-aerosol index** → biomass burning
+- **AOD × wind** → dust
+- **construction density × AOD** → construction
 
-- `Measurement` records from [`data/`](../data/README.md).
-- `GridCell` context (land use, road density, industrial flag).
+The normalised scores are apportioned to shares that sum to 1.0, and confidence is derived from the
+strength of the underlying signals.
 
-## Outputs
+## Layout
 
-- `Attribution` records (per-source shares + confidence) consumed by
-  [`decision/`](../decision/README.md), [`api/`](../api/README.md), and the frontend.
+- `models.py` — typed input (`GridCellInput`) and output schemas.
+- `engine.py` — `attribute_sources` (batch apportionment over a grid).
 
-## Key module
-
-- `engine.py` — `attribute_cell`, `attribute_batch`.
+**Input:** `Measurement` + `GridCell` context. **Output:** per-cell source shares + confidence
+([`Attribution`](../contracts/attribution.py) via the gateway adapter).
