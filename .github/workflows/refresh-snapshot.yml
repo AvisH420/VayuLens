@@ -58,14 +58,20 @@ jobs:
         if: always()
         run: rm -f "$GITHUB_WORKSPACE/gee-sa-key.json"
 
-      - name: Commit refreshed snapshots
+      # Publish to a dedicated, UNprotected branch (main requires PRs + reviews,
+      # which the bot can't satisfy). The gateway reads the snapshots from this
+      # branch's public raw URL, so a plain force-push with the default token is
+      # all that's needed — no PAT, no ruleset bypass. The branch is just data:
+      # each run replaces it with the latest main state + fresh snapshots.
+      - name: Publish snapshots to the data branch
         run: |
           git config user.name  "vayulens-bot"
           git config user.email "actions@github.com"
-          git add data/snapshots/*.json
-          if git diff --cached --quiet; then
-            echo "No snapshot changes."
+          git checkout -B snapshots
+          git add -f data/snapshots/*.json
+          if git diff --cached --quiet HEAD -- data/snapshots; then
+            echo "No snapshot changes; nothing to publish."
           else
             git commit -m "chore: refresh real-data snapshot [skip ci]"
-            git push
+            git push -f origin snapshots
           fi
