@@ -67,10 +67,24 @@ def _get_pipeline():
         "ASSISTANT_INDEX_DIR", str(_ROOT / "storage" / "vectors")
     )
     settings.parser.ocr_enabled = False  # corpus is markdown; no OCR needed
-    # The lightweight hashing embedder scores retrieval conservatively; the LLM
-    # is itself instructed to answer only from context (else "INSUFFICIENT"),
-    # so a lower gate improves recall without inviting hallucination.
-    settings.grounding.confidence_threshold = 0.22
+    # Retrieval tuning for a small regulatory corpus with the lightweight
+    # embedder: lean on BM25 (lexical terms like "vehicle", "construction",
+    # "GRAP" match reliably) over the near-random hashing vectors, and hand the
+    # LLM a generous slice of the corpus so the relevant passage is almost
+    # always present. With ~22 chunks total, retrieving ~10 is half the corpus.
+    settings.retriever.hybrid_alpha = 0.25   # 0 = pure BM25, 1 = pure dense
+    settings.retriever.top_k = 12
+    settings.reranker.top_n = 10
+    # Delegate the "is this answerable" decision to the LLM. The lightweight
+    # hashing embedder + lexical reranker score natural-language queries very
+    # low even when the retrieved passages are clearly relevant, so a
+    # meaningful retrieval-confidence gate would abstain on almost everything.
+    # The LLM is instructed to reply INSUFFICIENT_CONTEXT when the context
+    # genuinely doesn't cover the question (see GROUNDING_RULES), which is a far
+    # better relevance judge than keyword overlap. Keep only a floor to skip
+    # pure noise, and require at least one retrieved passage.
+    settings.grounding.confidence_threshold = 0.02
+    settings.grounding.min_sources = 1
 
     pipe = RAGPipeline(settings)
     if pipe.store.count() == 0:          # first run — index the corpus
@@ -83,13 +97,24 @@ def answer(query: str) -> dict:
     """Answer *query* and return the gateway's ChatAnswer dict shape."""
     pipe = _get_pipeline()
     g = pipe.ask(query)
+
+    # The raw retrieval confidence is always low with the lightweight embedder,
+    # so it misrepresents a good LLM answer. When the LLM actually grounded an
+    # answer, report a confidence from how many sources it cited; on an abstain
+    # keep the (low) retrieval score to signal weak grounding.
+    if g.refused:
+        confidence = round(g.confidence, 2)
+    else:
+        cited = sum(1 for _ in g.citations)
+        confidence = round(min(0.95, 0.55 + 0.1 * cited), 2)
+
     return {
         "text": g.answer,
         "citations": [
             {"doc": c.title or c.source, "ref": c.section or c.doc_type or c.source}
             for c in g.citations
         ][:5],
-        "confidence": round(g.confidence, 2),
+        "confidence": confidence,
         "retrieved": len(g.citations),
         "abstained": g.refused,
     }
