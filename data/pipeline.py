@@ -181,15 +181,24 @@ def fuse(
     return measurements
 
 
+# Default source order. openaq (broken v3 endpoint, ~100s/pull) and cpcb
+# (dead 404 portal) contribute nothing today; callers that need a fast, live
+# run should pass ``sources=WORKING_SOURCES``.
+ALL_SOURCES = ["openaq", "cpcb", "waqi", "open_meteo", "gee_sentinel5p"]
+WORKING_SOURCES = ["waqi", "open_meteo", "gee_sentinel5p"]
+
+
 def run_pipeline(
     city_id: str = "delhi",
     since: datetime | None = None,
     until: datetime | None = None,
+    sources: list[str] | None = None,
 ) -> tuple[list[GridCell], list[Measurement]]:
-    """End-to-end pipeline: build grid → pull all sources → fuse.
+    """End-to-end pipeline: build grid → pull sources → fuse.
 
     Convenience function that chains all steps for a single city and
-    time window.
+    time window. ``sources`` defaults to every connector; pass
+    ``WORKING_SOURCES`` to skip the non-functional openaq/cpcb pulls.
 
     Returns:
         (grid, measurements)
@@ -209,8 +218,8 @@ def run_pipeline(
     # 1. Build grid
     grid = build_grid(bbox)
 
-    # 2. Pull from all sources
-    sources = ["openaq", "cpcb", "waqi", "open_meteo", "gee_sentinel5p"]
+    # 2. Pull from sources
+    sources = sources or ALL_SOURCES
     calibrated_by_source: dict[str, list[dict]] = {}
     for src in sources:
         try:

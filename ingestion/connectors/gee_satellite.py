@@ -14,6 +14,45 @@ from datetime import datetime, timedelta
 from ingestion.base_connector import BaseConnector
 from ingestion import config as cfg
 
+_EE_READY = False
+
+
+def _init_earth_engine(ee) -> None:
+    """Initialise Earth Engine once, preferring a service-account key.
+
+    A service-account key (``GEE_SERVICE_ACCOUNT_KEY``) authenticates headless
+    on CI/servers where interactive ``earthengine authenticate`` can't run. When
+    it's absent we fall back to whatever local user credentials exist.
+    """
+    global _EE_READY
+    if _EE_READY:
+        return
+
+    import logging
+
+    key_path = cfg.GEE_SERVICE_ACCOUNT_KEY
+    if key_path:
+        try:
+            import json
+
+            with open(key_path, encoding="utf-8") as fh:
+                email = json.load(fh).get("client_email")
+            creds = ee.ServiceAccountCredentials(email, key_path)
+            ee.Initialize(creds, project=cfg.GEE_PROJECT_ID)
+            _EE_READY = True
+            return
+        except Exception as exc:  # noqa: BLE001
+            # Service account not fully provisioned (e.g. missing the
+            # serviceUsageConsumer IAM role). Fall back to user creds so local
+            # runs still work; the scheduled/headless job needs the SA fixed.
+            logging.getLogger("vayulens.ingestion").warning(
+                "GEE service-account init failed (%s); falling back to user creds.",
+                str(exc).splitlines()[0][:120],
+            )
+
+    ee.Initialize(project=cfg.GEE_PROJECT_ID)
+    _EE_READY = True
+
 
 class GEESatelliteConnector(BaseConnector):
     source_name = "gee_sentinel5p"
@@ -25,7 +64,7 @@ class GEESatelliteConnector(BaseConnector):
     ) -> list[dict]:
         import ee
 
-        ee.Initialize(project=cfg.GEE_PROJECT_ID)
+        _init_earth_engine(ee)
 
         min_lon, min_lat, max_lon, max_lat = bbox
         region = ee.Geometry.Rectangle([min_lon, min_lat, max_lon, max_lat])

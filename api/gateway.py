@@ -29,6 +29,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from api import demo_engine as engine
+from api import live_data
 from contracts.attribution import Attribution, SourceShares
 from contracts.forecast import Forecast, ForecastPoint
 from contracts.measurement import Measurement
@@ -66,8 +67,13 @@ def _demo_now() -> datetime:
     return now.replace(hour=11, minute=0, second=0, microsecond=0)
 
 
+def _build_city(city: str) -> dict[str, Any]:
+    """Real snapshot if REAL_DATA is on and present, else the demo engine."""
+    return live_data.build_city(city) or engine.build_city(city)
+
+
 def _cell_or_404(cell_id: str) -> tuple[str, dict[str, Any]]:
-    found = engine.find_cell(cell_id)
+    found = live_data.find_cell(cell_id) or engine.find_cell(cell_id)
     if not found:
         raise HTTPException(status_code=404, detail=f"unknown cell_id: {cell_id}")
     return found
@@ -129,8 +135,8 @@ def health() -> dict[str, Any]:
     """Liveness + a quick sanity readout of the demo grid."""
     return {
         "status": "ok",
-        "engine": "demo",
-        "cities": {cid: len(engine.build_city(cid)["cells"]) for cid in engine.CITIES},
+        "engine": "real" if live_data.enabled() else "demo",
+        "cities": {cid: len(_build_city(cid)["cells"]) for cid in engine.CITIES},
     }
 
 
@@ -144,7 +150,7 @@ def get_grid(city: str = Query("delhi", description="City id: delhi | panaji")) 
     """
     if city not in engine.CITIES:
         raise HTTPException(status_code=404, detail=f"unknown city: {city}")
-    return engine.build_city(city)
+    return _build_city(city)
 
 
 @app.get("/measurements/{cell_id}", response_model=list[Measurement])
