@@ -55,6 +55,13 @@ def _get(key: str, default: str = "") -> str:
     return _env.get(key) or os.getenv(key, default)
 
 
+# Export parsed .env values into the process environment (without clobbering
+# anything already set) so plain os.getenv(...) — used by the RAG LLM adapters
+# and other modules that don't import this config — sees them too.
+for _k, _v in _env.items():
+    os.environ.setdefault(_k, _v)
+
+
 # ── Feature flags ─────────────────────────────────────────────────────
 USE_MOCK: bool = _get("USE_MOCK", "true").lower() == "true"
 
@@ -62,6 +69,12 @@ USE_MOCK: bool = _get("USE_MOCK", "true").lower() == "true"
 OPENAQ_API_KEY: str = _get("OPENAQ_API_KEY")
 WAQI_TOKEN: str = _get("WAQI_TOKEN")
 GEE_PROJECT_ID: str = _get("GEE_PROJECT_ID")
+# Path to a GCP service-account JSON key for headless Earth Engine auth
+# (CI / servers where interactive `earthengine authenticate` is impossible).
+# If empty, EE falls back to any locally-authenticated user credentials.
+GEE_SERVICE_ACCOUNT_KEY: str = _get("GEE_SERVICE_ACCOUNT_KEY")
+# LLM gateway (OpenRouter — OpenAI-compatible). Key name matches the .env.
+OPEN_ROUTER_API_KEY: str = _get("OPEN_ROUTER_API_KEY")
 
 # ── API endpoints ─────────────────────────────────────────────────────
 OPENAQ_BASE_URL = "https://api.openaq.org/v3"

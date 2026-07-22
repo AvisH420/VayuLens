@@ -50,6 +50,32 @@ class OpenAIProvider(LLMProvider):
         return resp.choices[0].message.content or ""
 
 
+class OpenRouterProvider(LLMProvider):
+    """OpenRouter — one OpenAI-compatible endpoint fronting many models.
+
+    Set ``provider="openrouter"`` and a routed model id in config, e.g.
+    ``model="anthropic/claude-opus-4-8"`` or ``"openai/gpt-4o-mini"``.
+    Key comes from OPEN_ROUTER_API_KEY (matches the project .env).
+    """
+
+    def __init__(self, cfg: LLMCfg):
+        from openai import OpenAI  # type: ignore
+
+        key = os.getenv("OPEN_ROUTER_API_KEY") or os.getenv("OPENROUTER_API_KEY")
+        self._client = OpenAI(api_key=key, base_url="https://openrouter.ai/api/v1")
+        self._cfg = cfg
+
+    def generate(self, system, user, *, temperature=None, max_tokens=None) -> str:
+        resp = self._client.chat.completions.create(
+            model=self._cfg.model,
+            messages=[{"role": "system", "content": system},
+                      {"role": "user", "content": user}],
+            temperature=self._cfg.temperature if temperature is None else temperature,
+            max_tokens=self._cfg.max_tokens if max_tokens is None else max_tokens,
+        )
+        return resp.choices[0].message.content or ""
+
+
 class ClaudeProvider(LLMProvider):
     def __init__(self, cfg: LLMCfg):
         import anthropic  # type: ignore
@@ -180,6 +206,7 @@ class ExtractiveProvider(LLMProvider):
 
 _REGISTRY = {
     "openai": OpenAIProvider,
+    "openrouter": OpenRouterProvider,
     "claude": ClaudeProvider,
     "gemini": GeminiProvider,
     "ollama": OllamaProvider,

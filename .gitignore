@@ -33,6 +33,9 @@ yarn-error.log*
 *.key
 service-account*.json
 gee-credentials*.json
+# GCP / Earth Engine service-account keys ({project}-{keyid}.json)
+vayulens-*.json
+*-service-account*.json
 
 # ── Data files (don't commit raw / processed data) ────────────────────
 data_store/
