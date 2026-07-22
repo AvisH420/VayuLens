@@ -72,7 +72,7 @@ gateway reads — so the live site updates without a redeploy.
 | Data ingestion &amp; fusion (`ingestion/`, `data/`) | Rudra Singh |
 | Attribution &amp; forecasting (`attribution/`, `forecasting/`) | Anuvi Pareek |
 | RAG &amp; decision intelligence (`rag/`, `decision/`) | Dhareet Shah |
-| Platform &amp; frontend (`api/`, `frontend/`) | Jugraj Singh Bhatia |
+| Platform &amp; frontend (`api/`, `frontend/`) | Jugraj Bhatia(Team Leader) |
 
 ## Running locally
 
