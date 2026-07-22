@@ -1,28 +1,26 @@
-# ingestion/ — Schedulers, raw pulls & GEE satellite pipeline
+# ingestion/
 
-**Owner:** Role 1 (Data Engineer)
-**Builds against:** raw source APIs; output consumed by [`data/`](../data/README.md)
+Reliable ingest of raw data from every upstream source. This layer knows nothing about the grid or
+fusion — it fetches source-native records and hands them to [`data/`](../data/) to calibrate and fuse.
 
-## Purpose
+## Connectors
 
-Reliably get raw data *in*. This layer knows nothing about the grid or fusion —
-it only schedules and executes pulls and lands raw records in the raw store.
+Six source connectors behind a common `BaseConnector` interface, each with a live-API mode and a
+deterministic mock mode (selected by `USE_MOCK`), plus retry/backoff and rate-limit throttling:
 
-- **Schedulers** — recurring pull jobs per source (cron-style).
-- **Raw pulls** — one-off / backfill pulls over a time window.
-- **GEE satellite pipeline** — Google Earth Engine extraction of satellite
-  products (AOD, aerosol index, NO2).
+- **`waqi`** — real-time PM2.5 / PM10 / NO₂ from ground stations (bounds query → per-station pollutant fetch).
+- **`gee_satellite`** — Google Earth Engine: Sentinel-5P (NO₂, SO₂, UV-aerosol index) and MODIS aerosol
+  optical depth, reduced to the area of interest. Supports headless service-account auth.
+- **`open_meteo`** — wind speed/direction, temperature and gridded pollutant reanalysis, fetched in one
+  bulk multi-point request.
+- **`osm`** — OpenStreetMap land use, road density, industrial and construction footprints via Overpass.
+- **`openaq`**, **`cpcb`** — additional ground-station connectors.
 
-## Inputs
+## Layout
 
-- Upstream source APIs & credentials (ground stations, GEE, met reanalysis).
-- Schedule / backfill requests (source, time window, bbox).
+- `base_connector.py` — retry, throttle, and the mock/real routing every connector inherits.
+- `connectors/` — one module per source.
+- `config.py` — endpoints, city bounding boxes, credentials (from `.env`), source rate limits.
+- `scheduler.py`, `raw_store.py` — scheduled pulls and the raw-record store.
 
-## Outputs
-
-- Raw, source-native records in the raw store, ready for [`data/`](../data/README.md)
-  to calibrate and fuse.
-
-## Key module
-
-- `scheduler.py` — `schedule_pull`, `pull_raw`, `pull_gee_satellite`.
+**Output:** raw, source-native records ready for `data/`.

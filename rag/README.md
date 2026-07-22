@@ -1,30 +1,25 @@
-# rag/ — Document ingestion, vector store, retriever, grounded generation, eval
+# rag/
 
-**Owner:** Role 3 (Knowledge & Agents)
-**Builds against:** regulatory/policy corpus; output consumed by [`decision/`](../decision/README.md)
+Makes the platform's advice *grounded* in real regulations and science. A retrieval-augmented pipeline
+turns a curated corpus of Indian air-quality regulation into cited, trustworthy answers — and refuses
+rather than guess when the corpus doesn't cover a question.
 
-## Purpose
+## Pipeline
 
-Make the platform's advice *grounded* in real regulations and science. A
-retrieval-augmented pipeline turns a document corpus into cited, trustworthy
-answers — and an eval harness keeps it honest.
+document parsing → chunking → embeddings → hybrid retrieval → reranking → grounded generation
 
-- **Document ingestion** — load, chunk, embed regulations / SOPs / reports.
-- **Vector store** — index and persist embeddings.
-- **Retriever** — fetch the most relevant passages for a query.
-- **Grounded generation** — answer with inline citations to sources.
-- **Eval** — measure faithfulness, groundedness, retrieval hit-rate.
+- **`parser/`, `chunking/`** — load and split documents (regulations, SOPs, intervention playbooks).
+- **`embeddings/`** — transformer embeddings when available, with a zero-dependency hashing fallback so
+  the pipeline runs anywhere.
+- **`vector_store/`** — a JSON-persisted store with cosine search.
+- **`retriever/`** — **hybrid retrieval**: dense + BM25 with score fusion and MMR diversification.
+- **`reranker/`** — cross-encoder reranking, with a lexical fallback.
+- **`llm/`** — a provider-agnostic LLM layer (OpenAI, Claude, Gemini, Ollama, OpenRouter, and an
+  extractive no-API fallback). In production it uses **Claude via OpenRouter**.
+- **`prompts/`, `evaluation/`** — grounding prompts (which instruct the model to cite sources and reply
+  `INSUFFICIENT_CONTEXT` when it cannot answer) and a faithfulness/retrieval eval harness.
 
-## Inputs
+## Entry point
 
-- A corpus of documents (regulations, policy, scientific literature).
-- Natural-language queries (often from [`decision/`](../decision/README.md)).
-
-## Outputs
-
-- Grounded answers `{"answer", "citations"}` with source attribution.
-- Eval metric reports.
-
-## Key module
-
-- `pipeline.py` — `ingest_documents`, `retrieve`, `generate_grounded`, `evaluate`.
+`pipeline.py` — `RAGPipeline` (index a corpus, then `ask` / `recommend` / `advisory`), returning a
+`GroundedAnswer` with the answer, confidence, and citations.

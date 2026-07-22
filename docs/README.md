@@ -1,17 +1,7 @@
-# docs/ — Architecture notes
+# docs/
 
-**Owner:** shared / all roles
-**Purpose:** Living documentation for how VayuLens fits together — architecture,
-module boundaries, and design decisions.
+Cross-cutting design documentation for VayuLens. Module-specific detail lives in each module's own
+`README.md`; system-level design lives here.
 
-## Inputs
-
-- Design discussions and decisions from all four roles.
-
-## Outputs
-
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — the data-flow and module-boundary
-  reference (start here).
-
-Keep cross-cutting design here; keep module-specific detail in each module's own
-`README.md`.
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — the data-flow, module boundaries, deployment topology, and the
+  shared-contract seam. **Start here.**

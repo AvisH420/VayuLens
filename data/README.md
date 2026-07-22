@@ -1,30 +1,23 @@
-# data/ — Source connectors, grid builder, calibration & fusion
+# data/
 
-**Owner:** Role 1 (Data Engineer)
-**Builds against:** [`contracts/grid_cell.py`](../contracts/grid_cell.py), [`contracts/measurement.py`](../contracts/measurement.py)
+Turns heterogeneous raw feeds into one clean, gridded, calibrated truth layer that every downstream
+module trusts. Produces [`GridCell`](../contracts/grid_cell.py) and [`Measurement`](../contracts/measurement.py)
+records on the ~1&nbsp;km grid.
 
-## Purpose
+## Pipeline
 
-Turn heterogeneous raw inputs into a clean, gridded, calibrated truth layer that
-every downstream module trusts.
+`grid_builder` → `alignment` → `calibration` → `fusion` → `gap_filling`
 
-- **Source connectors** — ground monitoring stations, satellite products,
-  meteorology reanalysis, road/land-use GIS.
-- **~1km grid builder** — defines the canonical `GridCell` mesh over the city.
-- **Calibration / fusion** — bias-corrects each source and fuses them into
-  `Measurement` records with `quality_score` and `uncertainty`.
+- **`grid_builder.py`** — tessellates the city into ~1&nbsp;km cells and joins OpenStreetMap land-use
+  context (road density, industrial proximity, construction density).
+- **`alignment.py`** — snaps every raw reading to its nearest grid cell.
+- **`calibration.py`** — harmonises units and applies an AOD→PM2.5 regression to satellite aerosol data.
+- **`fusion.py`** — combines sources by **inverse-variance weighting** (ground stations trusted over
+  satellite) into a fused `Measurement` per cell, with a quality score and uncertainty.
+- **`gap_filling.py`** — interpolates missing fields with inverse-distance weighting, including proper
+  **circular averaging** for wind direction.
 
-## Inputs
+## Entry point
 
-- Raw source records (pulled by [`ingestion/`](../ingestion/README.md)).
-- Bounding box / area-of-interest definition.
-- GIS layers for ward, land use, road density, industrial sites.
-
-## Outputs
-
-- `list[GridCell]` — the canonical analysis grid.
-- `list[Measurement]` — fused, calibrated observations per cell per timestamp.
-
-## Key module
-
-- `pipeline.py` — `build_grid`, `fetch_source`, `calibrate`, `fuse`.
+`pipeline.py` — `build_grid`, `fetch_source`, `calibrate`, `fuse`, and `run_pipeline` (the full chain
+for a city and time window; pass `sources=WORKING_SOURCES` for a fast live run).
