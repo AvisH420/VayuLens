@@ -225,8 +225,11 @@ export default function MapView({
     const map = mapRef.current;
     if (!map || !readyRef.current) return;
     map.getSource("cells").setData(cellsToGeoJSON(cities, scenario));
+    // Re-run on `cities` too: the grid starts as the client-side build and is
+    // swapped for the real API grid once it loads, so the source data must
+    // refresh then — not only when a what-if scenario changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scenario]);
+  }, [scenario, cities]);
 
   // view changes repaint
   // eslint-disable-next-line react-hooks/exhaustive-deps
