@@ -13,3 +13,10 @@
 fastapi>=0.110
 uvicorn[standard]>=0.29
 pydantic>=2.6
+
+# Real grounded assistant (/chat with REAL_ASSISTANT=true):
+# the RAG stack runs on its zero-heavy-dep fallbacks (hashing embedder,
+# built-in BM25, JSON vector store), so it only needs these two beyond the
+# core. The offline snapshot job installs the full pipeline deps separately.
+pyyaml>=6.0              # rag/config.py loads YAML settings
+openai>=1.0             # OpenRouter (OpenAI-compatible) LLM client

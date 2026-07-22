@@ -28,6 +28,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+from api import assistant
 from api import demo_engine as engine
 from api import live_data
 from contracts.attribution import Attribution, SourceShares
@@ -224,7 +225,19 @@ def get_recommendations(cell_id: str) -> list[Recommendation]:
 
 @app.post("/chat", response_model=ChatAnswer)
 def post_chat(req: ChatRequest) -> ChatAnswer:
-    """Grounded Q&A over the regulation corpus; abstains on weak retrieval."""
+    """Grounded Q&A over the regulation corpus; abstains on weak retrieval.
+
+    Uses the real RAG assistant (retrieval + OpenRouter LLM) when
+    REAL_ASSISTANT is on; falls back to demo_engine, and to demo again if the
+    RAG stack errors, so the endpoint never 500s on a bad model/key.
+    """
+    if assistant.enabled():
+        try:
+            return ChatAnswer(**assistant.answer(req.query))
+        except Exception as exc:  # noqa: BLE001 — never break chat on LLM issues
+            import logging
+            logging.getLogger("vayulens.api").warning(
+                "Real assistant failed (%s); falling back to demo.", exc)
     return ChatAnswer(**engine.chat_answer(req.query))
 
 
