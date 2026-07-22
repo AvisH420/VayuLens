@@ -29,54 +29,74 @@ class OpenMeteoConnector(BaseConnector):
         step = 0.1
         lats = _arange(min_lat, max_lat, step)
         lons = _arange(min_lon, max_lon, step)
+        points = [(round(la, 4), round(lo, 4)) for la in lats for lo in lons]
+        if not points:
+            return []
+
+        start = since.strftime("%Y-%m-%d")
+        end = until.strftime("%Y-%m-%d")
+
+        # One bulk request per endpoint (Open-Meteo accepts comma-separated
+        # coordinates and returns a per-location array). This replaces ~80
+        # per-point calls with 2, so a slow endpoint no longer means dozens of
+        # timeout chances. Weather and air-quality are fetched independently:
+        # weather carries wind (required downstream), so it must survive an
+        # air-quality outage and vice versa.
+        wx = self._bulk(cfg.OPEN_METEO_WEATHER_URL, points, start, end,
+                        "temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_2m")
+        aq = self._bulk(cfg.OPEN_METEO_AQ_URL, points, start, end,
+                        "pm2_5,pm10,nitrogen_dioxide,sulphur_dioxide,carbon_monoxide,ozone")
 
         records: list[dict] = []
-        for lat in lats:
-            for lon in lons:
-                self._throttle()
-                # Air quality
-                aq = requests.get(cfg.OPEN_METEO_AQ_URL, params={
-                    "latitude": round(lat, 4),
-                    "longitude": round(lon, 4),
-                    "hourly": "pm2_5,pm10,nitrogen_dioxide,sulphur_dioxide,"
-                              "carbon_monoxide,ozone",
-                    "start_date": since.strftime("%Y-%m-%d"),
-                    "end_date": until.strftime("%Y-%m-%d"),
-                }, timeout=30)
-                aq.raise_for_status()
-                aq_data = aq.json().get("hourly", {})
-
-                # Weather
-                wx = requests.get(cfg.OPEN_METEO_WEATHER_URL, params={
-                    "latitude": round(lat, 4),
-                    "longitude": round(lon, 4),
-                    "hourly": "temperature_2m,wind_speed_10m,wind_direction_10m,"
-                              "relative_humidity_2m",
-                    "start_date": since.strftime("%Y-%m-%d"),
-                    "end_date": until.strftime("%Y-%m-%d"),
-                }, timeout=30)
-                wx.raise_for_status()
-                wx_data = wx.json().get("hourly", {})
-
-                times = aq_data.get("time", [])
-                for i, t in enumerate(times):
-                    records.append({
-                        "source": "open_meteo",
-                        "lat": round(lat, 4),
-                        "lon": round(lon, 4),
-                        "pm25": _safe_idx(aq_data.get("pm2_5"), i),
-                        "pm10": _safe_idx(aq_data.get("pm10"), i),
-                        "no2": _safe_idx(aq_data.get("nitrogen_dioxide"), i),
-                        "so2": _safe_idx(aq_data.get("sulphur_dioxide"), i),
-                        "co": _safe_idx(aq_data.get("carbon_monoxide"), i),
-                        "o3": _safe_idx(aq_data.get("ozone"), i),
-                        "temp": _safe_idx(wx_data.get("temperature_2m"), i),
-                        "wind_speed": _safe_idx(wx_data.get("wind_speed_10m"), i),
-                        "wind_dir": _safe_idx(wx_data.get("wind_direction_10m"), i),
-                        "humidity": _safe_idx(wx_data.get("relative_humidity_2m"), i),
-                        "datetime": t,
-                    })
+        for idx, (lat, lon) in enumerate(points):
+            wx_h = wx[idx] if idx < len(wx) else {}
+            aq_h = aq[idx] if idx < len(aq) else {}
+            times = wx_h.get("time") or aq_h.get("time") or []
+            for i, t in enumerate(times):
+                records.append({
+                    "source": "open_meteo",
+                    "lat": lat, "lon": lon,
+                    "pm25": _safe_idx(aq_h.get("pm2_5"), i),
+                    "pm10": _safe_idx(aq_h.get("pm10"), i),
+                    "no2": _safe_idx(aq_h.get("nitrogen_dioxide"), i),
+                    "so2": _safe_idx(aq_h.get("sulphur_dioxide"), i),
+                    "co": _safe_idx(aq_h.get("carbon_monoxide"), i),
+                    "o3": _safe_idx(aq_h.get("ozone"), i),
+                    "temp": _safe_idx(wx_h.get("temperature_2m"), i),
+                    "wind_speed": _safe_idx(wx_h.get("wind_speed_10m"), i),
+                    "wind_dir": _safe_idx(wx_h.get("wind_direction_10m"), i),
+                    "humidity": _safe_idx(wx_h.get("relative_humidity_2m"), i),
+                    "datetime": t,
+                })
         return records
+
+    def _bulk(self, url, points, start, end, hourly) -> list[dict]:
+        """One multi-location Open-Meteo call; returns per-point 'hourly' dicts.
+
+        Retries transient failures and returns [] on total failure so the
+        other endpoint's data still flows (never raises).
+        """
+        import logging
+        lat_csv = ",".join(str(p[0]) for p in points)
+        lon_csv = ",".join(str(p[1]) for p in points)
+        params = {"latitude": lat_csv, "longitude": lon_csv,
+                  "hourly": hourly, "start_date": start, "end_date": end}
+        for attempt in range(1, 4):
+            try:
+                r = requests.get(url, params=params, timeout=60)
+                r.raise_for_status()
+                data = r.json()
+                # Multi-location responses are a list; single is a dict.
+                if isinstance(data, dict):
+                    data = [data]
+                return [loc.get("hourly", {}) for loc in data]
+            except Exception as exc:  # noqa: BLE001 — transient, retry
+                logging.getLogger("vayulens.ingestion").warning(
+                    "[open_meteo] %s attempt %d/3 failed: %s",
+                    url.split("//")[-1][:24], attempt, str(exc)[:80])
+                import time
+                time.sleep(3 * attempt)
+        return []
 
     def _pull_mock(
         self, bbox: tuple[float, float, float, float],
