@@ -11,10 +11,41 @@ from __future__ import annotations
 import hashlib
 from datetime import datetime
 
+import logging
+import time
+
 import requests
 
 from ingestion.base_connector import BaseConnector
 from ingestion import config as cfg
+
+logger = logging.getLogger("vayulens.ingestion")
+
+# Overpass rejects requests with no User-Agent (HTTP 406) and is prone to
+# transient 429/504 under load, so identify ourselves and retry a few times.
+_OVERPASS_HEADERS = {"User-Agent": "VayuLens/1.0 (air-quality research)"}
+
+
+def _overpass_post(query: str, retries: int = 3) -> list[dict]:
+    """POST an Overpass query with a User-Agent and retry on transient errors."""
+    delay = 4.0
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.post(
+                cfg.OVERPASS_URL, data={"data": query},
+                headers=_OVERPASS_HEADERS, timeout=120,
+            )
+            if resp.status_code == 200:
+                return resp.json().get("elements", [])
+            logger.warning("[osm] Overpass HTTP %s (attempt %d/%d)",
+                           resp.status_code, attempt, retries)
+        except Exception as exc:  # noqa: BLE001 — network/parse, retry
+            logger.warning("[osm] Overpass error %s (attempt %d/%d)",
+                           type(exc).__name__, attempt, retries)
+        if attempt < retries:
+            time.sleep(delay)
+            delay *= 1.5
+    return []
 
 
 class OSMConnector(BaseConnector):
@@ -40,9 +71,7 @@ class OSMConnector(BaseConnector):
         """
         self._throttle()
         try:
-            resp = requests.post(cfg.OVERPASS_URL, data={"data": landuse_query}, timeout=90)
-            resp.raise_for_status()
-            for el in resp.json().get("elements", []):
+            for el in _overpass_post(landuse_query):
                 center = el.get("center", {})
                 lat = center.get("lat") or el.get("lat")
                 lon = center.get("lon") or el.get("lon")
@@ -66,9 +95,7 @@ class OSMConnector(BaseConnector):
         """
         self._throttle()
         try:
-            resp = requests.post(cfg.OVERPASS_URL, data={"data": road_query}, timeout=90)
-            resp.raise_for_status()
-            for el in resp.json().get("elements", []):
+            for el in _overpass_post(road_query):
                 geom = el.get("geometry", [])
                 if geom:
                     mid = geom[len(geom)//2]
@@ -94,9 +121,7 @@ class OSMConnector(BaseConnector):
         """
         self._throttle()
         try:
-            resp = requests.post(cfg.OVERPASS_URL, data={"data": ind_query}, timeout=90)
-            resp.raise_for_status()
-            for el in resp.json().get("elements", []):
+            for el in _overpass_post(ind_query):
                 center = el.get("center", {})
                 lat = center.get("lat") or el.get("lat")
                 lon = center.get("lon") or el.get("lon")
@@ -123,9 +148,7 @@ class OSMConnector(BaseConnector):
         """
         self._throttle()
         try:
-            resp = requests.post(cfg.OVERPASS_URL, data={"data": const_query}, timeout=90)
-            resp.raise_for_status()
-            for el in resp.json().get("elements", []):
+            for el in _overpass_post(const_query):
                 center = el.get("center", {})
                 lat = center.get("lat") or el.get("lat")
                 lon = center.get("lon") or el.get("lon")
